@@ -237,7 +237,7 @@ public partial class BorumBygDBContext : DbContext
             entity.Property(e => e.UserId).ValueGeneratedNever();
             entity.Property(e => e.Password)
                 .IsRequired()
-                .HasMaxLength(255);
+                .HasColumnType("varbinary(32)");
             entity.Property(e => e.Role)
                 .IsRequired()
                 .HasMaxLength(50);
