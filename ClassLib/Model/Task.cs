@@ -7,6 +7,9 @@ namespace ClassLib.Model;
 
 public partial class Task
 {
+
+    //Instancefields and properties
+
     public int TaskId { get; set; }
 
     public int DepartmentId { get; set; }
@@ -34,4 +37,13 @@ public partial class Task
     public virtual Project Project { get; set; }
 
     public virtual ICollection<TimeLog> TimeLogs { get; set; } = new List<TimeLog>();
+
+
+    //Constructors are made "behind the scenes" by EF Core
+
+    //ToString() method
+
+
+
+
 }
