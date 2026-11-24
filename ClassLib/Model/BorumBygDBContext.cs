@@ -82,7 +82,7 @@ public partial class BorumBygDBContext : DbContext
             entity.Property(e => e.Website).HasMaxLength(255);
 
             entity.HasOne(d => d.User).WithMany(p => p.Customers)
-                .HasForeignKey(d => d.UserId)
+                .HasForeignKey(d => d.OwnerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Customers_Users");
         });
@@ -127,7 +127,7 @@ public partial class BorumBygDBContext : DbContext
                 .HasConstraintName("FK_Notes_TimeLogs");
 
             entity.HasOne(d => d.User).WithMany(p => p.Notes)
-                .HasForeignKey(d => d.UserId)
+                .HasForeignKey(d => d.OwnerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Notes_Users");
         });

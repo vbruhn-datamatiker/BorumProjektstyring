@@ -1,13 +1,66 @@
 ﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  flex: 0 0 250px;
+  padding: 1.5rem;
+  color: #fff;
+  background-color: #212529;
+}
+
+.sidebar header {
+  margin-bottom: 2.5rem;
+}
+
+.sidebar a {
+  color: inherit;
+}
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
-a {
+.main-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+  padding: 2rem;
+}
+
+.main-content main {
+  flex: 1;
+}
+
+.sidebar h2 {
+  margin-bottom: .75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.sidebar .nav-link {
+  padding: .6rem .75rem;
+  border-radius: .25rem;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link:focus {
+  color: #fff;
+  background-color: rgba(255, 255, 255, .1);
+}
+
+.main-content a {
   color: #0077cc;
 }
 
@@ -40,9 +93,24 @@ button.accept-policy {
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
   white-space: nowrap;
   line-height: 60px;
+}
+
+@media (max-width: 767.98px) {
+  .app-layout {
+    display: block;
+  }
+
+  .sidebar {
+    padding: 1rem;
+  }
+
+  .sidebar header {
+    margin-bottom: 1rem;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
 }
