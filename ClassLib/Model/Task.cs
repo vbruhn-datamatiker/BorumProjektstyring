@@ -43,7 +43,10 @@ public partial class Task
 
     //ToString() method
 
-
+    public override string ToString()
+    {
+        return $"TaskId: {TaskId}, DepartmentId: {DepartmentId}, LocationId: {LocationId}, Type: {Type}, Status: {Status}, StartDate: {StartDate}, EndDate: {EndDate}, ProjectId: {ProjectId}, CreatorUserId: {CreatorUserId}";
+    }
 
 
 }
