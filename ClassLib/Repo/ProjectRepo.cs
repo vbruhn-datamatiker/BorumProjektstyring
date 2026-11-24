@@ -53,5 +53,16 @@ namespace ClassLib.Repo
             }
             return project;
         }
+
+        /// <summary>
+        /// Gets the projects associated with a customer.
+        /// </summary>
+        /// <param name="customerId">The ID of the customer.</param>
+        /// <returns>A list of projects associated with the specified customer.</returns>
+        public List<Project> GetProjectsByCustomerId(int customerId)
+        {
+            return _context.Projects.Where(p => p.CustomerId == customerId).ToList();
+        }
+
     }
 }

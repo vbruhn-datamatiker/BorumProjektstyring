@@ -1,0 +1,143 @@
+﻿@page
+@model BorumProjektstyring.Pages.ProjectPageModel
+@{
+    ViewData["Title"] = "Projekt";
+}
+
+<div class="project-page">
+    <header class="topbar">
+        <nav class="breadcrumbs" aria-label="Brødkrummesti">
+            <a href="#">Kunder</a>
+            <span>/</span>
+            <a href="#">Acme Industries</a>
+            <span>/</span>
+            <span aria-current="page">Kontoretablering</span>
+        </nav>
+        <div class="topbar-actions">
+            <label class="visually-hidden" for="global-search">Søg</label>
+            <input id="global-search" class="search-input" type="search" placeholder="Søg i kunder, projekter og opgaver..." />
+            <button class="button button-light logout-button" type="button">Log ud <span aria-hidden="true">↪</span></button>
+            <button class="button button-light profile-button" type="button">Profil</button>
+            <span class="avatar" aria-label="Brugerprofil">♙</span>
+        </div>
+    </header>
+
+    <main class="project-content">
+        <section class="project-heading">
+            <div>
+                <h1>Projekt</h1>
+                <p class="project-meta">Projekt #204 <span>·</span> Type: Implementering <span>·</span> Startdato: 1. jun. 2026</p>
+                <p class="project-history">Historik: Den indledende afklaring er afsluttet; installationen gik i gang.</p>
+            </div>
+            <div class="heading-actions">
+                <button class="button button-light" type="button">Rediger projekt</button>
+                <button class="button button-dark" type="button"><span aria-hidden="true">＋</span> Nyt Project</button>
+            </div>
+        </section>
+
+        <section class="customer-summary" aria-label="Kundeoplysninger">
+            <div class="customer-primary">
+                <strong>Acme Industries <span>·</span> Kunde #12</strong>
+                <span>Kontakt: Jordan Smith</span>
+            </div>
+            <div class="customer-contact">
+                <a href="mailto:jordan@example.com">jordan@example.com</a>
+                <a href="tel:+12025550142">+1 202 555 0142</a>
+            </div>
+            <a class="customer-website" href="https://www.example.com">www.example.com</a>
+            <button class="button button-light customer-button" type="button">Se kunde</button>
+        </section>
+
+        <div class="project-workspace">
+            <div class="project-main-column">
+                <section class="panel tasks-panel" aria-labelledby="tasks-heading">
+                    <div class="tasks-toolbar">
+                        <h2 id="tasks-heading">Opgaver (1-10 af 101)</h2>
+                        <div class="task-filters">
+                            <label class="visually-hidden" for="status-filter">Status</label>
+                            <select id="status-filter"><option>Status: Alle</option></select>
+                            <label class="visually-hidden" for="assignee-filter">Oprettet af</label>
+                            <select id="assignee-filter"><option>Oprettet af: Alle</option></select>
+                            <label class="visually-hidden" for="location-filter">Lokation</label>
+                            <select id="location-filter"><option>Lokation: Alle</option></select>
+                            <button class="sort-button" type="button">Startdato <span aria-hidden="true">↓</span></button>
+                        </div>
+                    </div>
+                    <div class="table-scroll">
+                        <table class="tasks-table">
+                            <thead>
+                                <tr><th scope="col">Opgave / type</th><th scope="col">Status</th><th scope="col">Lokation</th><th scope="col">Oprettet af</th><th scope="col">Start → slut</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>#101 · Opmåling</td><td>Afsluttet <span class="chevron">⌄</span></td><td>10 Market Street</td><td>Alex Morgan</td><td>1. jun. → 2. jun.</td></tr>
+                                <tr><td>#102 · Planlægning</td><td>Planlagt <span class="chevron">⌄</span></td><td>10 Market Street</td><td>Jamie Lee</td><td>5. jun. → 8. jun.</td></tr>
+                                <tr><td>#103 · Opsætning</td><td>Planlagt <span class="chevron">⌄</span></td><td>22 River Road</td><td>Jamie Lee</td><td>8. jun. → 10. jun.</td></tr>
+                                <tr class="selected-row" aria-current="true"><td><strong>#104 · Installation</strong></td><td>I gang <span class="chevron">⌄</span></td><td>10 Market Street</td><td>Alex Morgan</td><td>3. jun. → 12. jun.</td></tr>
+                                <tr><td>#105 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
+                                <tr><td>#106 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
+                                <tr><td>#107 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
+                                <tr><td>#108 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
+                                <tr><td>#109 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
+                                <tr><td>#110 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="table-caption">Viser alle 10 opgaver <span>·</span> Vælg en opgave for at se detaljer</p>
+                </section>
+
+                <section class="panel notes-panel" aria-labelledby="notes-heading">
+                    <div class="notes-toolbar">
+                        <h2 id="notes-heading">Noter</h2>
+                        <label class="visually-hidden" for="notes-filter">Vis noter</label>
+                        <select id="notes-filter"><option>Vis: Projekt #204</option></select>
+                        <span class="notes-type">Opgave / Tidsregistrering</span>
+                        <button class="button button-light" type="button">＋ Tilføj note</button>
+                    </div>
+                    <article class="note-item">
+                        <div>
+                            <h3>Adgangskrav til lokationen</h3>
+                            <p>Aftal adgang med kundens kontaktperson inden ankomst.</p>
+                        </div>
+                        <div class="coordinator"><span class="avatar avatar-small" aria-hidden="true">♙</span><span>Koordinator: Jane Nielsen</span></div>
+                    </article>
+                </section>
+            </div>
+
+            <aside class="panel task-details" aria-labelledby="task-details-heading">
+                <div class="details-heading">
+                    <div>
+                        <p class="eyebrow">Valgt opgave</p>
+                        <h2 id="task-details-heading">Opgave #104</h2>
+                        <p class="task-type">Installation</p>
+                    </div>
+                    <div class="details-actions">
+                        <button class="button button-light" type="button">Rediger</button>
+                        <button class="button button-light" type="button">Slet</button>
+                    </div>
+                </div>
+                <dl class="task-facts">
+                    <div><dt>Status</dt><dd>I gang</dd></div>
+                    <div><dt>Afdelings-ID</dt><dd>26-80</dd></div>
+                    <div><dt>Startdato</dt><dd>3. jun. 2026</dd></div>
+                    <div><dt>Slutdato</dt><dd>--.--.--</dd></div>
+                    <div class="fact-wide"><dt>Oprettet af</dt><dd>Alex Morgan</dd><small>Bruger #7</small></div>
+                </dl>
+                <section class="detail-section">
+                    <h3>Lokation</h3>
+                    <p class="eyebrow">Lokation #31</p>
+                    <p>10 Market Street<br />10001 <span>·</span> New York</p>
+                    <button class="button button-light location-button" type="button">Se lokation</button>
+                </section>
+                <section class="detail-section related-section">
+                    <h3>Relaterede poster</h3>
+                    <p>6,5 timer <span>·</span> 3 tidsregistreringer</p>
+                    <div class="related-actions">
+                        <button class="button button-light" type="button">Se tidsregistreringer</button>
+                        <button class="button button-light" type="button">Opgavenoter</button>
+                    </div>
+                </section>
+                <p class="detail-breadcrumb">Projekt #204 <span>·</span> Kontoretablering</p>
+            </aside>
+        </div>
+    </main>
+</div>
