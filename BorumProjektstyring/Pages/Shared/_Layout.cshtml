@@ -10,38 +10,44 @@
     <link rel="stylesheet" href="~/BorumProjektstyring.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
+    <div class="app-layout">
+        <aside class="sidebar">
+            <header>
                 <a class="navbar-brand" asp-area="" asp-page="/Index">BorumProjektstyring</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+            </header>
+            <nav aria-label="Primær navigation">
+                <h2>Arbejde</h2>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Kunder/Index">Kunder</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Projekter/Index">Projekter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Opgaver/Index">Opgaver</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Tidsregistrering/Index">Tidsregistrering</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-page="/Ugeseddel/Index">Ugeseddel</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <div class="main-content">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - BorumProjektstyring - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            <footer class="border-top footer text-muted">
+                <div>
+                    &copy; 2026 - BorumProjektstyring - <a asp-area="" asp-page="/Privacy">Privacy</a>
+                </div>
+            </footer>
         </div>
-    </footer>
+    </div>
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
