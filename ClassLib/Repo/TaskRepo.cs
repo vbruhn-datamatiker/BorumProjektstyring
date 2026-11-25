@@ -98,7 +98,7 @@ namespace ClassLib.Repo
             return _dbContext.Tasks.Find(id);
         }
 
-
+        //TODO Tjek op, om Update-metoden er skrevet korrekt. Både i dette repo, men også i alle andre repos
 
         /// <summary>
         /// Updates an existing task in the database with updated values and saves the changes to the database.
@@ -130,6 +130,27 @@ namespace ClassLib.Repo
 
             
             return taskToUpdate;
+        }
+
+        //TODO Husk ToString-metoden skal være ens i alle repos
+
+
+        /// <summary>
+        /// ToString method that returns a string representation of our task repo.
+        /// </summary>
+        /// <returns>A string with information about all the task entities the task repo manages </returns>
+        public override string ToString()
+        {
+            {
+                string result = "[ ";
+                foreach (TaskModel task in _dbContext.Tasks.ToList())
+                {
+                    result += task + " ";
+                }
+
+                return result + " ]";
+            }
+            ;
         }
     }
 }
