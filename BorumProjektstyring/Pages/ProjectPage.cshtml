@@ -10,11 +10,11 @@
             <a href="#">Kunder</a>
             <span>/</span>
 
-            //TODO Add Status to base class and database 
+           <!--TODO Add Status to base class and database-->
 
-           //TODO missing AddScope to remember the customer.
+           <!--TODO missing AddScope to remember the customer.-->
 
-           //TODO need to add project owner. 
+           <!--TODO need to add project owner.-->
 
             <a href="#">Acme Industries</a>
             <span>/</span>
@@ -125,7 +125,9 @@
                             <select id="assignee-filter"><option>Oprettet af: Alle</option></select>
                             <label class="visually-hidden" for="location-filter">Lokation</label>
                             <select id="location-filter"><option>Lokation: Alle</option></select>
-                            <button class="sort-button" type="button">Startdato <span aria-hidden="true">↓</span></button>
+
+                            <!--created a ASC or DEC option when viewing the list-->
+                            <button id="project-name-sort" class="sort-button" type="button" data-sort-direction="desc" aria-label="Sorter efter projektnavn, faldende">Projektnavn <span aria-hidden="true">↓</span></button>
                         </div>
                     </div>
                     <div class="table-scroll">
@@ -141,9 +143,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var project in Model.Projects)
+                                @foreach (var project in Model.Projects.OrderByDescending(project => project.ProjectTitle))
                                 {
-                                    <tr>
+                                    <tr data-project-name="@project.ProjectTitle">
                                         <td>@project.ProjectTitle</td>
                                         <td>#@project.ProjectId</td>
                                         <td>@project.Type</td>
@@ -155,6 +157,31 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!--Script for the acsending and desending list after name  (do we want this)?-->
+                    <script>
+                        const projectNameSortButton = document.getElementById("project-name-sort");
+                        const projectRowsBody = document.querySelector(".tasks-table tbody");
+                        const projectNameSortIcon = projectNameSortButton.querySelector("span");
+
+                        projectNameSortButton.addEventListener("click", () => {
+                            const direction = projectNameSortButton.dataset.sortDirection === "asc" ? "desc" : "asc";
+                            const rows = Array.from(projectRowsBody.rows);
+
+                            rows.sort((a, b) => {
+                                const nameDifference = a.dataset.projectName.localeCompare(b.dataset.projectName, "da", { sensitivity: "base" });
+                                return direction === "asc" ? nameDifference : -nameDifference;
+                            });
+
+                            projectRowsBody.append(...rows);
+                            projectNameSortButton.dataset.sortDirection = direction;
+                            projectNameSortButton.setAttribute("aria-label", `Sorter efter projektnavn, ${direction === "asc" ? "stigende" : "faldende"}`);
+                            projectNameSortIcon.textContent = direction === "asc" ? "↑" : "↓";
+                        });
+                    </script>
+
+
+
                     <p class="table-caption">Viser @Model.Projects.Count projekter på denne side af @Model.Projects.Count i alt</p>
                 </section>
 
