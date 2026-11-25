@@ -25,21 +25,12 @@ public class ProjectPageModel : PageModel
     public DateTime StartDate { get; set; }
     [BindProperty]
     public string History { get; set; }
-    List<Project> Projects { get; set; } = new List<Project>();
+
+    public List<Project> Projects { get; private set; } = new List<Project>();
 
     public void OnGet()
     {
-        try
-        {
-
-            Projects = _projectRepo.GetAll();
-
-        }
-        catch (Exception)
-        {
-            // Log the exception or handle it as needed
-            Console.WriteLine("An error occurred while retrieving projects.");
-        }
+        Projects = _projectRepo.GetAll();
     }
 
     public IActionResult OnPostCreateProject(string projectTitle, string type, DateTime startDate, string history, int customerId, int userId)

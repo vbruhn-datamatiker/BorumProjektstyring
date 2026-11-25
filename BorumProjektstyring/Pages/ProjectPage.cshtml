@@ -25,15 +25,64 @@
     <main class="project-content">
         <section class="project-heading">
             <div>
-                <h1>Projekt</h1>
+                <h1>Kunde: </h1>
                 <p class="project-meta">Projekt #204 <span>·</span> Type: Implementering <span>·</span> Startdato: 1. jun. 2026</p>
                 <p class="project-history">Historik: Den indledende afklaring er afsluttet; installationen gik i gang.</p>
             </div>
             <div class="heading-actions">
                 <button class="button button-light" type="button">Rediger projekt</button>
-                <button class="button button-dark" type="button"><span aria-hidden="true">＋</span> Nyt Project</button>
+                <button class="button button-dark" type="button" data-bs-toggle="modal" data-bs-target="#createProjectModal"><span aria-hidden="true">＋</span> Nyt projekt</button>
             </div>
         </section>
+
+        <!-- Modal for creating a pop up window for a new project -->
+        <div class="modal fade project-modal" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="post" asp-page-handler="CreateProject">
+                        <div class="modal-header">
+                            <div>
+                                <p class="eyebrow">Projekter</p>
+                                <h2 class="modal-title" id="createProjectModalLabel">Opret nyt projekt</h2>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Luk"></button>
+                        </div>
+                        <div class="modal-body project-form">
+                            <div class="project-form-field">
+                                <label for="newProjectTitle">Projektnavn</label>
+                                <input id="newProjectTitle" name="projectTitle" type="text" class="form-control" required />
+                            </div>
+                            <div class="project-form-field">
+                                <label for="newProjectType">Type</label>
+                                <input id="newProjectType" name="type" type="text" class="form-control" required />
+                            </div>
+                            <div class="project-form-field">
+                                <label for="newProjectStartDate">Startdato</label>
+                                <input id="newProjectStartDate" name="startDate" type="date" class="form-control" required />
+                            </div>
+                            <div class="project-form-field">
+                                <label for="newProjectHistory">Historik</label>
+                                <textarea id="newProjectHistory" name="history" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="project-form-row">
+                                <div class="project-form-field">
+                                    <label for="newProjectCustomerId">Kunde-ID</label>
+                                    <input id="newProjectCustomerId" name="customerId" type="number" class="form-control" min="1" required />
+                                </div>
+                                <div class="project-form-field">
+                                    <label for="newProjectUserId">Ansvarlig-ID</label>
+                                    <input id="newProjectUserId" name="userId" type="number" class="form-control" min="1" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="button button-light" data-bs-dismiss="modal">Annuller</button>
+                            <button type="submit" class="button button-dark">Opret projekt</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <section class="customer-summary" aria-label="Kundeoplysninger">
             <div class="customer-primary">
@@ -52,7 +101,9 @@
             <div class="project-main-column">
                 <section class="panel tasks-panel" aria-labelledby="tasks-heading">
                     <div class="tasks-toolbar">
-                        <h2 id="tasks-heading">Opgaver (1-10 af 101)</h2>
+
+                        <!--- creates a counter to show how many total projects in the database --->
+                        <h2 id="tasks-heading">Projekter <span class="project-count-badge">I alt: @Model.Projects.Count</span></h2>
                         <div class="task-filters">
                             <label class="visually-hidden" for="status-filter">Status</label>
                             <select id="status-filter"><option>Status: Alle</option></select>
@@ -66,23 +117,31 @@
                     <div class="table-scroll">
                         <table class="tasks-table">
                             <thead>
-                                <tr><th scope="col">Opgave / type</th><th scope="col">Status</th><th scope="col">Lokation</th><th scope="col">Oprettet af</th><th scope="col">Start → slut</th></tr>
+                                <tr>
+                                    <th scope="col">Projektnavn</th>
+                                    <th scope="col">Projekt-ID</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Startdato</th>
+                                    <th scope="col">Kunde-ID</th>
+                                    <th scope="col">Ansvarlig-ID</th>
+                                </tr>
                             </thead>
                             <tbody>
-                                <tr><td>#101 · Opmåling</td><td>Afsluttet <span class="chevron">⌄</span></td><td>10 Market Street</td><td>Alex Morgan</td><td>1. jun. → 2. jun.</td></tr>
-                                <tr><td>#102 · Planlægning</td><td>Planlagt <span class="chevron">⌄</span></td><td>10 Market Street</td><td>Jamie Lee</td><td>5. jun. → 8. jun.</td></tr>
-                                <tr><td>#103 · Opsætning</td><td>Planlagt <span class="chevron">⌄</span></td><td>22 River Road</td><td>Jamie Lee</td><td>8. jun. → 10. jun.</td></tr>
-                                <tr class="selected-row" aria-current="true"><td><strong>#104 · Installation</strong></td><td>I gang <span class="chevron">⌄</span></td><td>10 Market Street</td><td>Alex Morgan</td><td>3. jun. → 12. jun.</td></tr>
-                                <tr><td>#105 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
-                                <tr><td>#106 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
-                                <tr><td>#107 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
-                                <tr><td>#108 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
-                                <tr><td>#109 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
-                                <tr><td>#110 · Inspektion</td><td>I gang <span class="chevron">⌄</span></td><td>22 River Road</td><td>Sam Taylor</td><td>4. jun. → 15. jun.</td></tr>
+                                @foreach (var project in Model.Projects)
+                                {
+                                    <tr>
+                                        <td>@project.ProjectTitle</td>
+                                        <td>#@project.ProjectId</td>
+                                        <td>@project.Type</td>
+                                        <td>@project.StartDate.ToString("dd-MM-yyyy")</td>
+                                        <td>@project.CustomerId</td>
+                                        <td>@project.UserId</td>
+                                    </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
-                    <p class="table-caption">Viser alle 10 opgaver <span>·</span> Vælg en opgave for at se detaljer</p>
+                    <p class="table-caption">Viser @Model.Projects.Count projekter på denne side af @Model.Projects.Count i alt</p>
                 </section>
 
                 <section class="panel notes-panel" aria-labelledby="notes-heading">
