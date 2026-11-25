@@ -118,13 +118,42 @@
 
                         <!--- creates a counter to show how many total projects in the database --->
                         <h2 id="tasks-heading">Projekter <span class="project-count-badge">I alt: @Model.Projects.Count</span></h2>
+
+
+                        <!-- Creates a drop down window when searching-->
                         <div class="task-filters">
-                            <label class="visually-hidden" for="status-filter">Status</label>
-                            <select id="status-filter"><option>Status: Alle</option></select>
-                            <label class="visually-hidden" for="assignee-filter">Oprettet af</label>
-                            <select id="assignee-filter"><option>Oprettet af: Alle</option></select>
-                            <label class="visually-hidden" for="location-filter">Lokation</label>
-                            <select id="location-filter"><option>Lokation: Alle</option></select>
+                            <label class="visually-hidden" for="type-filter">Projekttype</label>
+                            <select id="type-filter">
+                                <option value="">Type: Alle</option>
+                                @foreach (var type in Model.Projects
+                                    .Select(project => project.Type)
+                                    .Where(type => !string.IsNullOrWhiteSpace(type))
+                                    .Distinct()
+                                    .OrderBy(type => type))
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </select>
+                            <label class="visually-hidden" for="assignee-filter">Ansvarlig-ID</label>
+                            <select id="assignee-filter">
+                                <option value="">Ansvarlig-ID: Alle</option>
+                                @foreach (var userId in Model.Projects.Select(project => project.UserId).Distinct().OrderBy(userId => userId))
+                                {
+                                    <option value="@userId">@userId</option>
+                                }
+                            </select>
+                            <label class="visually-hidden" for="customer-filter">Kunde</label>
+                            <select id="customer-filter">
+                                <option value="">Kunde: Alle</option>
+                                @foreach (var customerName in Model.Projects
+                                    .Select(project => project.Customer?.Name)
+                                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                                    .Distinct()
+                                    .OrderBy(name => name))
+                                {
+                                    <option value="@customerName">@customerName</option>
+                                }
+                            </select>
 
                             <!--created a ASC or DEC option when viewing the list-->
                             <button id="project-name-sort" class="sort-button" type="button" data-sort-direction="desc" aria-label="Sorter efter projektnavn, faldende">Projektnavn <span aria-hidden="true">↓</span></button>
@@ -145,7 +174,7 @@
                             <tbody>
                                 @foreach (var project in Model.Projects.OrderByDescending(project => project.ProjectTitle))
                                 {
-                                    <tr data-project-name="@project.ProjectTitle">
+                                    <tr data-project-name="@project.ProjectTitle" data-project-type="@project.Type" data-user-id="@project.UserId" data-customer-name="@project.Customer?.Name">
                                         <td>@project.ProjectTitle</td>
                                         <td>#@project.ProjectId</td>
                                         <td>@project.Type</td>
@@ -163,6 +192,21 @@
                         const projectNameSortButton = document.getElementById("project-name-sort");
                         const projectRowsBody = document.querySelector(".tasks-table tbody");
                         const projectNameSortIcon = projectNameSortButton.querySelector("span");
+                        const projectRows = Array.from(projectRowsBody.rows);
+                        const projectFilters = [
+                            { element: document.getElementById("type-filter"), attribute: "projectType" },
+                            { element: document.getElementById("assignee-filter"), attribute: "userId" },
+                            { element: document.getElementById("customer-filter"), attribute: "customerName" }
+                        ];
+
+                        const applyProjectFilters = () => {
+                            projectRows.forEach(row => {
+                                row.hidden = projectFilters.some(({ element, attribute }) =>
+                                    element.value && row.dataset[attribute] !== element.value);
+                            });
+                        };
+
+                        projectFilters.forEach(({ element }) => element.addEventListener("change", applyProjectFilters));
 
                         projectNameSortButton.addEventListener("click", () => {
                             const direction = projectNameSortButton.dataset.sortDirection === "asc" ? "desc" : "asc";
