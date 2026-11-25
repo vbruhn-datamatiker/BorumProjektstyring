@@ -8,7 +8,7 @@ using Microsoft.Graph;
 
 namespace ClassLib.Repo
 {
-    public class UserRepo : IUserRepo
+    public class UserRepo : IRepo<User>
     {
         private BorumBygDBContext _context;
 
@@ -42,10 +42,7 @@ namespace ClassLib.Repo
             return _context.Users.Find(id);
         }
 
-        public UserAuthentication? GetAuthByUserName(string username)
-        {
-            return _context.UserAuthentications.FirstOrDefault(u => u.Username == username);
-        }
+
 
         // TODO: See if Update method for UserRepo actually works, as it is not tested yet. We have used entry.CurrentValues.SetValues(entity) to update the entity, but we need to check if it works as expected. Does .Update work instead?
 

@@ -74,6 +74,20 @@ body.login-page {
   font-size: 11px;
 }
 
+.login-validation {
+  margin-bottom: 15px;
+  padding: 9px;
+  color: #a4262c;
+  background: #fdf2f2;
+  border: 1px solid #e5baba;
+  border-radius: 2px;
+  font-size: 11px;
+}
+
+.login-validation:empty {
+  display: none;
+}
+
 .login-form__field {
   margin-bottom: 15px;
 }

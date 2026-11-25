@@ -1,6 +1,8 @@
 using ClassLib.Interface;
+using ClassLib.Model;
 using ClassLib.Repo;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 
 namespace BorumProjektstyring
 {
@@ -13,8 +15,10 @@ namespace BorumProjektstyring
             // Add services to the container.
             builder.Services.AddRazorPages();
 
-            IUserRepo userRepo = new UserRepo();    
-            builder.Services.AddSingleton<IUserRepo>(userRepo);
+            IUserAuthRepo userRepo = new UserAuthRepo();
+            // We are using scoped because we want a new instance of the repository for each HTTP request.
+            // This is important for managing database connections and ensuring that each request has its own context.
+            builder.Services.AddScoped<IUserAuthRepo, UserAuthRepo>();
 
             builder.Services.Configure<CookiePolicyOptions>(options =>
             {
@@ -30,14 +34,23 @@ namespace BorumProjektstyring
                     options.AccessDeniedPath = "/AccessDenied"; // Set the access denied page path
                 });
 
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+                options.AddPolicy("Koordinator", policy => policy.RequireRole("Koordinator"));
+                options.AddPolicy("Bruger", policy => policy.RequireRole("Bruger"));
+                options.AddPolicy("Profile", policy =>
+                    policy.RequireRole("Koordinator", "Bruger"));
+            });
+
             builder.Services.AddMvc().AddRazorPagesOptions(options =>
             {
                 options.Conventions.AuthorizeFolder("/Admin", "Admin");
-                options.Conventions.AuthorizeFolder("/Profile", "Koordinator");
-                options.Conventions.AuthorizeFolder("/Profile", "User"); // Apply authorization to the User folder
+                options.Conventions.AuthorizeFolder("/Profile", "Profile");
             });
 
-          
+            
+
 
 
             var app = builder.Build();

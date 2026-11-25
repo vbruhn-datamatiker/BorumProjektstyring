@@ -24,6 +24,8 @@
             <p class="login-card__intro">Log ind for at administrere projekter, opgaver og tid.</p>
 
             <form method="post" class="login-form" asp-page-handler="Submit">
+                <div asp-validation-summary="ModelOnly" class="login-validation" role="alert"></div>
+
                 <div class="login-form__field">
                     <label for="email">Arbejdsmail</label>
                     <input id="email" asp-for="Username" type="email" placeholder="navn@firma.dk" autocomplete="email" />

@@ -5,8 +5,10 @@ using System.Text;
 
 namespace ClassLib.Interface
 {
-    public interface IUserRepo : IRepo<User>
+    public interface IUserAuthRepo : IRepo<UserAuthentication>
     {
         UserAuthentication GetAuthByUserName(string username);
+
+        UserAuthentication? UpdatePassword(UserAuthentication entity, int id);
     }
 }

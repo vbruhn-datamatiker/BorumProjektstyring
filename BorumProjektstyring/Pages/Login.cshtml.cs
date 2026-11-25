@@ -16,7 +16,7 @@ namespace BorumProjektstyring.Pages
 
         private readonly UserService _userService;
 
-        public LoginModel(IUserRepo repo)
+        public LoginModel(IUserAuthRepo repo)
         {
             _userService = new UserService(repo);
         }
@@ -36,44 +36,39 @@ namespace BorumProjektstyring.Pages
 
         public async Task<IActionResult> OnPostSubmit()
         {
-
-            var userRepo = new UserRepo();
+            var userRepo = new UserAuthRepo();
             var userAuth = userRepo.GetAuthByUserName(Username);
-            if (ModelState.IsValid)
-            {
-                if (_userService.AuthenticateUser(Username, Password))
-                {
-                    var claims = new List<Claim> { new Claim(ClaimTypes.Role, "Admin") };
-                    if (userAuth?.Role == "Admin")
-                    {
-                        claims.Add(new Claim(ClaimTypes.Role, "Admin"));
-                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-
-                        return RedirectToPage("/Admin");
-                    }
-                    else if (userAuth?.Role == "Koordinator")
-                    {
-                        return RedirectToPage("/Profile");
-                    }
-                    else
-                    {
-                        // Handle other roles or redirect to a default page
-                       ModelState.AddModelError(string.Empty, "Ugyldigt brugernavn eller adgangskode.");
-                    }
-                }
-           
-                // Authentication successful
-                // You can set session or cookie here if needed
-                return RedirectToPage("/Profile");
-            }
-            else
+            if (!ModelState.IsValid || !_userService.AuthenticateUser(Username, Password))
             {
-                // Authentication failed
                 ModelState.AddModelError(string.Empty, "Ugyldigt brugernavn eller adgangskode.");
                 return Page();
             }
+
+            var role = userAuth?.Role;
+            if (role != "Admin" && role != "Koordinator" && role != "Bruger")
+            {
+                ModelState.AddModelError(string.Empty, "Brugeren har ingen gyldig rolle.");
+                return Page();
+            }
+
+            var claims = new List<Claim>
+            {
+                new(ClaimTypes.NameIdentifier, userAuth.UserId.ToString()),
+                new(ClaimTypes.Name, Username),
+                new(ClaimTypes.Role, role)
+            };
+            var claimsIdentity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
+
+            return role == "Admin"
+                ? RedirectToPage("/Admin")
+                : RedirectToPage("/Profile");
         }
     }
 }
