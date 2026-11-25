@@ -9,6 +9,13 @@
         <nav class="breadcrumbs" aria-label="Brødkrummesti">
             <a href="#">Kunder</a>
             <span>/</span>
+
+            //TODO Add Status to base class and database 
+
+           //TODO missing AddScope to remember the customer.
+
+           //TODO need to add project owner. 
+
             <a href="#">Acme Industries</a>
             <span>/</span>
             <span aria-current="page">Kontoretablering</span>
@@ -29,13 +36,16 @@
                 <p class="project-meta">Projekt #204 <span>·</span> Type: Implementering <span>·</span> Startdato: 1. jun. 2026</p>
                 <p class="project-history">Historik: Den indledende afklaring er afsluttet; installationen gik i gang.</p>
             </div>
+
+            
             <div class="heading-actions">
                 <button class="button button-light" type="button">Rediger projekt</button>
                 <button class="button button-dark" type="button" data-bs-toggle="modal" data-bs-target="#createProjectModal"><span aria-hidden="true">＋</span> Nyt projekt</button>
             </div>
         </section>
 
-        <!-- Modal for creating a pop up window for a new project -->
+       <!--- Modal for creating a pop up window for a new project--->
+
         <div class="modal fade project-modal" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -64,11 +74,15 @@
                                 <label for="newProjectHistory">Historik</label>
                                 <textarea id="newProjectHistory" name="history" class="form-control" rows="3"></textarea>
                             </div>
+
                             <div class="project-form-row">
                                 <div class="project-form-field">
                                     <label for="newProjectCustomerId">Kunde-ID</label>
                                     <input id="newProjectCustomerId" name="customerId" type="number" class="form-control" min="1" required />
                                 </div>
+
+                                //TODO : Missing AddScope to rember the customer. 
+
                                 <div class="project-form-field">
                                     <label for="newProjectUserId">Ansvarlig-ID</label>
                                     <input id="newProjectUserId" name="userId" type="number" class="form-control" min="1" required />
@@ -122,7 +136,7 @@
                                     <th scope="col">Projekt-ID</th>
                                     <th scope="col">Type</th>
                                     <th scope="col">Startdato</th>
-                                    <th scope="col">Kunde-ID</th>
+                                    <th scope="col">Kunde</th>
                                     <th scope="col">Ansvarlig-ID</th>
                                 </tr>
                             </thead>
@@ -134,7 +148,7 @@
                                         <td>#@project.ProjectId</td>
                                         <td>@project.Type</td>
                                         <td>@project.StartDate.ToString("dd-MM-yyyy")</td>
-                                        <td>@project.CustomerId</td>
+                                        <td>@project.Customer?.Name</td>
                                         <td>@project.UserId</td>
                                     </tr>
                                 }

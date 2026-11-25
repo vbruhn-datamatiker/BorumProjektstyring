@@ -1,5 +1,6 @@
 ﻿using ClassLib.Interface;
 using ClassLib.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -35,7 +36,9 @@ namespace ClassLib.Repo
 
         public List<Project> GetAll()
         {
-            return _context.Projects.ToList();
+            return _context.Projects
+                .Include(project => project.Customer)
+                .ToList();
         }
 
         public Project GetById(int id)
