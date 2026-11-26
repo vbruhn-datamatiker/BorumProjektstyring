@@ -18,6 +18,7 @@ namespace ClassLib.Repo
 
         public Customer Add(Customer entity)
         {
+            entity.Validate();
             _context.Customers.Add(entity);
             _context.SaveChanges();
             return entity;
