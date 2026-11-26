@@ -12,29 +12,35 @@
 <body>
     <div class="app-layout">
         <aside class="sidebar">
-            <header>
-                <a class="navbar-brand" asp-area="" asp-page="/Index">BorumProjektstyring</a>
+            <header class="sidebar-header">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">ARBEJDSRUM</a>
+                <button class="workspace-switcher" type="button">Acme arbejdsrum <span aria-hidden="true">⌄</span></button>
             </header>
             <nav aria-label="Primær navigation">
                 <h2>Arbejde</h2>
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-page="/Kunder/Index">Kunder</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-page="/Projekter/Index">Projekter</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-page="/Opgaver/Index">Opgaver</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-page="/Tidsregistrering/Index">Tidsregistrering</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-page="/Ugeseddel/Index">Ugeseddel</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" asp-area="" asp-page="/Kunder/Index">Kunder</a></li>
+                    <li class="nav-item"><a class="nav-link active" asp-area="" asp-page="/ProjectPage">Projekter</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-area="" asp-page="/Opgaver/Index">Opgaver</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-area="" asp-page="/Tidsregistrering/Index">Tidsregistreringer</a></li>
+                </ul>
+                <hr />
+                <h2>Kartotek</h2>
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#">Lokationer</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Brugere</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Fravær</a></li>
                 </ul>
             </nav>
+            <section class="sidebar-customer">
+                <h2>Aktuel kunde</h2>
+                <strong>Acme Industries</strong>
+                <span>Kontoretablering</span>
+            </section>
+            <footer class="sidebar-footer">
+                <a href="#">Hjælp og support</a>
+                <span>Alex Morgan <span aria-hidden="true">·</span> Konto</span>
+            </footer>
         </aside>
         <div class="main-content">
             <main role="main" class="pb-3">
