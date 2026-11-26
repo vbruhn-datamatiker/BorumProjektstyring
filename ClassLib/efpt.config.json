@@ -57,6 +57,10 @@
       {
          "Name": "[dbo].[Users]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[vw_TaskWithInfo]",
+         "ObjectType": 3
       }
    ],
    "UiHint": null,

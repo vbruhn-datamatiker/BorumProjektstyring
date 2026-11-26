@@ -19,7 +19,7 @@ public partial class Note
 
     public int? ProjectId { get; set; }
 
-    public int OwnerId { get; set; }
+    public int UserId { get; set; }
 
     public virtual Project Project { get; set; }
 

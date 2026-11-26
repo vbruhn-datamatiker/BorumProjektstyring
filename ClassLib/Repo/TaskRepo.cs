@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using ClassLib.Model;
 using TaskModel = ClassLib.Model.Task;
+using LocationModel = ClassLib.Model.Location;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph;
+using Microsoft.Graph.Models;
 
 namespace ClassLib.Repo
 {
@@ -92,10 +94,11 @@ namespace ClassLib.Repo
         /// The task matching with the specified id. If no task
         /// with that id exists, null is returned.
         /// </returns>
-        public TaskModel? GetById(int id)
+        public TaskModel? GetById(int taskId)
         {
-          
-            return _dbContext.Tasks.Find(id);
+
+            return _dbContext.Tasks.Include(task => task.Location) //Sørger for, at task'ens location også inkluderes til brug på selve hjemmesiden.
+                .FirstOrDefault(task => task.TaskId == taskId);
         }
 
         //TODO Tjek op, om Update-metoden er skrevet korrekt. Både i dette repo, men også i alle andre repos
@@ -149,8 +152,11 @@ namespace ClassLib.Repo
                 }
 
                 return result + " ]";
-            }
-            ;
-        }
+            };
+
+
+          }
+
+       
     }
 }

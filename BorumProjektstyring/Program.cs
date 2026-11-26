@@ -1,3 +1,5 @@
+using ClassLib.Repo;
+
 namespace BorumProjektstyring
 {
     public class Program
@@ -8,6 +10,8 @@ namespace BorumProjektstyring
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddScoped<VwTaskWithInfoRepo>();
+            builder.Services.AddScoped<TaskRepo>();
 
             var app = builder.Build();
 
