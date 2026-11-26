@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using ClassLib.Security;
 
 namespace BorumProjektstyring.Pages;
 
@@ -8,6 +9,10 @@ public class PasswordInput
     public string? CurrentPassword { get; set; }
 
     [Required(ErrorMessage = "Indtast en ny adgangskode.")]
+    [StringLength(
+        PasswordPolicy.MaximumLength,
+        MinimumLength = PasswordPolicy.MinimumLength,
+        ErrorMessage = "Adgangskoden skal være mellem 10 og 128 tegn.")]
     public string? NewPassword { get; set; }
 
     [Required(ErrorMessage = "Bekræft den nye adgangskode.")]

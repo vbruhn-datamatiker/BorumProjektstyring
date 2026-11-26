@@ -2,26 +2,34 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using ClassLib.Interface;
 using ClassLib.Model;
+using ClassLib.Security;
+using ClassLib.Service;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace BorumProjektstyring.Pages;
 
 public class ChangePasswordModel : PageModel
 {
     private readonly IUserAuthRepo _userAuthRepo;
+    private readonly UserService _userService;
 
-    public ChangePasswordModel(IUserAuthRepo userAuthRepo)
+    public ChangePasswordModel(
+        IUserAuthRepo userAuthRepo,
+        UserService userService)
     {
         _userAuthRepo = userAuthRepo;
+        _userService = userService;
     }
 
     [BindProperty]
     [Required(ErrorMessage = "Indtast en ny adgangskode.")]
+    [StringLength(
+        PasswordPolicy.MaximumLength,
+        MinimumLength = PasswordPolicy.MinimumLength,
+        ErrorMessage = "Adgangskoden skal være mellem 15 og 128 tegn.")]
     [DataType(DataType.Password)]
     public string NewPassword { get; set; } = string.Empty;
 
@@ -59,12 +67,12 @@ public class ChangePasswordModel : PageModel
             return RedirectToPage("/Login");
         }
 
-        using var sha256 = SHA256.Create();
-        userAuth.Password = sha256.ComputeHash(Encoding.UTF8.GetBytes(NewPassword));
-
-        if (_userAuthRepo.UpdatePassword(userAuth, userId) is null)
+        if (!_userService.ChangePassword(
+                userAuth.Username,
+                NewPassword,
+                out var passwordError))
         {
-            ModelState.AddModelError(string.Empty, "Adgangskoden kunne ikke ændres.");
+            ModelState.AddModelError(string.Empty, passwordError);
             return Page();
         }
 

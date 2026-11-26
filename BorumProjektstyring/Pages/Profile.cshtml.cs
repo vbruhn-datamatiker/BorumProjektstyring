@@ -99,9 +99,12 @@ namespace BorumProjektstyring.Pages
             {
                 PasswordError = "Den nuværende adgangskode er forkert.";
             }
-            else if (_userService.ChangePasswordHash(username, Password.NewPassword!) == null)
+            else if (!_userService.ChangePassword(
+                username,
+                Password.NewPassword!,
+                out var passwordError))
             {
-                PasswordError = "Adgangskoden kunne ikke ændres.";
+                PasswordError = passwordError;
             }
             else
             {
@@ -170,7 +173,7 @@ namespace BorumProjektstyring.Pages
             }
 
             // Need to update database so User and UserAuth are in sync, as emails are not the same on these tables.
-            // This is a temporary solution until we have a better way to handle this.
+            // This (using userAuth.Username) is a temporary solution until we have a better way to handle this.
             Profile.Username = user.Name;
             Profile.Email = userAuth?.Username;
             Profile.Phone = user.Phone;

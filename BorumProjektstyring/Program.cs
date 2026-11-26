@@ -1,6 +1,7 @@
 using ClassLib.Interface;
 using ClassLib.Model;
 using ClassLib.Repo;
+using ClassLib.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 
@@ -19,6 +20,7 @@ namespace BorumProjektstyring
             // We are using scoped because we want a new instance of the repository for each HTTP request.
             // This is important for managing database connections and ensuring that each request has its own context.
             builder.Services.AddScoped<IUserAuthRepo, UserAuthRepo>();
+            builder.Services.AddScoped<UserService>();
 
             builder.Services.Configure<CookiePolicyOptions>(options =>
             {
