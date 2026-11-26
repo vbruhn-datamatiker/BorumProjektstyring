@@ -61,7 +61,9 @@ namespace ClassLib.Repo
             }
 
             user.Password = entity.Password;
+            user.MustChangePassword = false;
             _context.Entry(user).Property(u => u.Password).IsModified = true;
+            _context.Entry(user).Property(u => u.MustChangePassword).IsModified = true;
             _context.SaveChanges();
             return user;
         }

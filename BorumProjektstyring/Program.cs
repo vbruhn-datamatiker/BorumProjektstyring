@@ -68,6 +68,31 @@ namespace BorumProjektstyring
             app.UseRouting();
 
             app.UseAuthentication();
+
+            app.Use(async (context, next) =>
+            {
+                var mustChangePassword =
+                    context.User.Identity?.IsAuthenticated == true &&
+                    context.User.HasClaim("MustChangePassword", "true");
+
+                var path = context.Request.Path;
+                var isAllowedPath =
+                    path.StartsWithSegments("/ChangePassword") ||
+                    path.StartsWithSegments("/Login") ||
+                    path.StartsWithSegments("/Logout") ||
+                    path.StartsWithSegments("/css") ||
+                    path.StartsWithSegments("/js") ||
+                    path.StartsWithSegments("/lib");
+
+                if (mustChangePassword && !isAllowedPath)
+                {
+                    context.Response.Redirect("/ChangePassword");
+                    return;
+                }
+
+                await next();
+            });
+
             app.UseAuthorization();
             
 

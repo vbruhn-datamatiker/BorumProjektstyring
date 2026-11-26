@@ -15,5 +15,7 @@ public partial class UserAuthentication
 
     public byte[] Password { get; set; }
 
+    public bool MustChangePassword { get; set; }
+
     public virtual User User { get; set; }
 }

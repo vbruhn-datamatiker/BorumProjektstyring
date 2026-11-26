@@ -56,7 +56,8 @@ namespace BorumProjektstyring.Pages
             {
                 new(ClaimTypes.NameIdentifier, userAuth.UserId.ToString()),
                 new(ClaimTypes.Name, Username),
-                new(ClaimTypes.Role, role)
+                new(ClaimTypes.Role, role),
+                new("MustChangePassword", userAuth.MustChangePassword ? "true" : "false")
             };
             var claimsIdentity = new ClaimsIdentity(
                 claims,
@@ -65,6 +66,11 @@ namespace BorumProjektstyring.Pages
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
+
+            if (userAuth.MustChangePassword)
+            {
+                return RedirectToPage("/ChangePassword");
+            }
 
             return role == "Admin"
                 ? RedirectToPage("/Admin")
