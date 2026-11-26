@@ -1,0 +1,293 @@
+﻿@page
+@model BorumProjektstyring.Pages.ProjectPageModel
+@{
+    ViewData["Title"] = "Projekt";
+}
+
+<div class="project-page">
+    <header class="topbar">
+        <nav class="breadcrumbs" aria-label="Brødkrummesti">
+            <a href="#">Kunder</a>
+            <span>/</span>
+
+           <!--TODO Add Status to base class and database-->
+
+           <!--TODO missing AddScope to remember the customer.-->
+
+           <!--TODO need to add project owner.-->
+
+            <a href="#">Acme Industries</a>
+            <span>/</span>
+            <span aria-current="page">Kontoretablering</span>
+        </nav>
+        <div class="topbar-actions">
+            <label class="visually-hidden" for="global-search">Søg</label>
+            <input id="global-search" class="search-input" type="search" placeholder="Søg i kunder, projekter og opgaver..." />
+            <button class="button button-light logout-button" type="button">Log ud <span aria-hidden="true">↪</span></button>
+            <button class="button button-light profile-button" type="button">Profil</button>
+            <span class="avatar" aria-label="Brugerprofil">♙</span>
+        </div>
+    </header>
+
+    <main class="project-content">
+        <section class="project-heading">
+            <div>
+                <h1>Kunde: </h1>
+                <p class="project-meta">Projekt #204 <span>·</span> Type: Implementering <span>·</span> Startdato: 1. jun. 2026</p>
+                <p class="project-history">Historik: Den indledende afklaring er afsluttet; installationen gik i gang.</p>
+            </div>
+
+            
+            <div class="heading-actions">
+                <button class="button button-light" type="button">Rediger projekt</button>
+                <button class="button button-dark" type="button" data-bs-toggle="modal" data-bs-target="#createProjectModal"><span aria-hidden="true">＋</span> Nyt projekt</button>
+            </div>
+        </section>
+
+       <!--- Modal for creating a pop up window for a new project--->
+
+        <div class="modal fade project-modal" id="createProjectModal" tabindex="-1" aria-labelledby="createProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form method="post" asp-page-handler="CreateProject">
+                        <div class="modal-header">
+                            <div>
+                                <p class="eyebrow">Projekter</p>
+                                <h2 class="modal-title" id="createProjectModalLabel">Opret nyt projekt</h2>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Luk"></button>
+                        </div>
+                        <div class="modal-body project-form">
+                            <div class="project-form-field">
+                                <label for="newProjectTitle">Projektnavn</label>
+                                <input id="newProjectTitle" name="projectTitle" type="text" class="form-control" required />
+                            </div>
+                            <div class="project-form-field">
+                                <label for="newProjectType">Type</label>
+                                <input id="newProjectType" name="type" type="text" class="form-control" required />
+                            </div>
+                            <div class="project-form-field">
+                                <label for="newProjectStartDate">Startdato</label>
+                                <input id="newProjectStartDate" name="startDate" type="date" class="form-control" required />
+                            </div>
+                            <div class="project-form-field">
+                                <label for="newProjectHistory">Historik</label>
+                                <textarea id="newProjectHistory" name="history" class="form-control" rows="3"></textarea>
+                            </div>
+
+                            <div class="project-form-row">
+                                <div class="project-form-field">
+                                    <label for="newProjectCustomerId">Kunde-ID</label>
+                                    <input id="newProjectCustomerId" name="customerId" type="number" class="form-control" min="1" required />
+                                </div>
+
+                                //TODO : Missing AddScope to rember the customer. 
+
+                                <div class="project-form-field">
+                                    <label for="newProjectUserId">Ansvarlig-ID</label>
+                                    <input id="newProjectUserId" name="userId" type="number" class="form-control" min="1" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="button button-light" data-bs-dismiss="modal">Annuller</button>
+                            <button type="submit" class="button button-dark">Opret projekt</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <section class="customer-summary" aria-label="Kundeoplysninger">
+            <div class="customer-primary">
+                <strong>Acme Industries <span>·</span> Kunde #12</strong>
+                <span>Kontakt: Jordan Smith</span>
+            </div>
+            <div class="customer-contact">
+                <a href="mailto:jordan@example.com">jordan@example.com</a>
+                <a href="tel:+12025550142">+1 202 555 0142</a>
+            </div>
+            <a class="customer-website" href="https://www.example.com">www.example.com</a>
+            <button class="button button-light customer-button" type="button">Se kunde</button>
+        </section>
+
+        <div class="project-workspace">
+            <div class="project-main-column">
+                <section class="panel tasks-panel" aria-labelledby="tasks-heading">
+                    <div class="tasks-toolbar">
+
+                        <!--- creates a counter to show how many total projects in the database --->
+                        <h2 id="tasks-heading">Projekter <span class="project-count-badge">I alt: @Model.Projects.Count</span></h2>
+
+
+                        <!-- Creates a drop down window when searching-->
+
+                        <!-- creates a dropdown menu for project types-->
+                        <div class="task-filters">
+                            <label class="visually-hidden" for="type-filter">Projekttype</label>
+                            <select id="type-filter">
+                                <option value="">Type: Alle</option>
+                                @foreach (var type in Model.Projects
+                                    .Select(project => project.Type)
+                                    .Where(type => !string.IsNullOrWhiteSpace(type))
+                                    .Distinct()
+                                    .OrderBy(type => type))
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </select>
+
+                            <!--creates a dropdown menu for Anslarlig for the project-->
+                            <label class="visually-hidden" for="assignee-filter">Ansvarlig-ID</label>
+                            <select id="assignee-filter">
+                                <option value="">Ansvarlig-ID: Alle</option>
+                                @foreach (var userId in Model.Projects.Select(project => project.UserId).Distinct().OrderBy(userId => userId))
+                                {
+                                    <option value="@userId">@userId</option>
+                                }
+                            </select>
+
+                            <!--create a dropdown menu for customer name-->
+                            <label class="visually-hidden" for="customer-filter">Kunde</label>
+                            <select id="customer-filter">
+                                <option value="">Kunde: Alle</option>
+                                @foreach (var customerName in Model.Projects
+                                    .Select(project => project.Customer?.Name)
+                                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                                    .Distinct()
+                                    .OrderBy(name => name))
+                                {
+                                    <option value="@customerName">@customerName</option>
+                                }
+                            </select>
+
+                            <!--created a ASC or DEC option when viewing the list-->
+                            <button id="project-name-sort" class="sort-button" type="button" data-sort-direction="desc" aria-label="Sorter efter projektnavn, faldende">Projektnavn <span aria-hidden="true">↓</span></button>
+                        </div>
+                    </div>
+                    <div class="table-scroll">
+                        <table class="tasks-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Projektnavn</th>
+                                    <th scope="col">Projekt-ID</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Startdato</th>
+                                    <th scope="col">Kunde</th>
+                                    <th scope="col">Ansvarlig-ID</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var project in Model.Projects.OrderByDescending(project => project.ProjectTitle))
+                                {
+                                    <tr data-project-name="@project.ProjectTitle" data-project-type="@project.Type" data-user-id="@project.UserId" data-customer-name="@project.Customer?.Name">
+                                        <td>@project.ProjectTitle</td>
+                                        <td>#@project.ProjectId</td>
+                                        <td>@project.Type</td>
+                                        <td>@project.StartDate.ToString("dd-MM-yyyy")</td>
+                                        <td>@project.Customer?.Name</td>
+                                        <td>@project.UserId</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!--Script for the acsending and desending list after name  (do we want this)?-->
+                    <script>
+                        const projectNameSortButton = document.getElementById("project-name-sort");
+                        const projectRowsBody = document.querySelector(".tasks-table tbody");
+                        const projectNameSortIcon = projectNameSortButton.querySelector("span");
+                        const projectRows = Array.from(projectRowsBody.rows);
+                        const projectFilters = [
+                            { element: document.getElementById("type-filter"), attribute: "projectType" },
+                            { element: document.getElementById("assignee-filter"), attribute: "userId" },
+                            { element: document.getElementById("customer-filter"), attribute: "customerName" }
+                        ];
+
+                        const applyProjectFilters = () => {
+                            projectRows.forEach(row => {
+                                row.hidden = projectFilters.some(({ element, attribute }) =>
+                                    element.value && row.dataset[attribute] !== element.value);
+                            });
+                        };
+
+                        projectFilters.forEach(({ element }) => element.addEventListener("change", applyProjectFilters));
+
+                        projectNameSortButton.addEventListener("click", () => {
+                            const direction = projectNameSortButton.dataset.sortDirection === "asc" ? "desc" : "asc";
+                            const rows = Array.from(projectRowsBody.rows);
+
+                            rows.sort((a, b) => {
+                                const nameDifference = a.dataset.projectName.localeCompare(b.dataset.projectName, "da", { sensitivity: "base" });
+                                return direction === "asc" ? nameDifference : -nameDifference;
+                            });
+
+                            projectRowsBody.append(...rows);
+                            projectNameSortButton.dataset.sortDirection = direction;
+                            projectNameSortButton.setAttribute("aria-label", `Sorter efter projektnavn, ${direction === "asc" ? "stigende" : "faldende"}`);
+                            projectNameSortIcon.textContent = direction === "asc" ? "↑" : "↓";
+                        });
+                    </script>
+
+
+
+                    <p class="table-caption">Viser @Model.Projects.Count projekter på denne side af @Model.Projects.Count i alt</p>
+                </section>
+
+                <section class="panel notes-panel" aria-labelledby="notes-heading">
+                    <div class="notes-toolbar">
+                        <h2 id="notes-heading">Noter</h2>
+                        <label class="visually-hidden" for="notes-filter">Vis noter</label>
+                        <select id="notes-filter"><option>Vis: Projekt #204</option></select>
+                        <span class="notes-type">Opgave / Tidsregistrering</span>
+                        <button class="button button-light" type="button">＋ Tilføj note</button>
+                    </div>
+                    <article class="note-item">
+                        <div>
+                            <h3>Adgangskrav til lokationen</h3>
+                            <p>Aftal adgang med kundens kontaktperson inden ankomst.</p>
+                        </div>
+                        <div class="coordinator"><span class="avatar avatar-small" aria-hidden="true">♙</span><span>Koordinator: Jane Nielsen</span></div>
+                    </article>
+                </section>
+            </div>
+
+            <aside class="panel task-details" aria-labelledby="task-details-heading">
+                <div class="details-heading">
+                    <div>
+                        <p class="eyebrow">Valgt opgave</p>
+                        <h2 id="task-details-heading">Opgave #104</h2>
+                        <p class="task-type">Installation</p>
+                    </div>
+                    <div class="details-actions">
+                        <button class="button button-light" type="button">Rediger</button>
+                        <button class="button button-light" type="button">Slet</button>
+                    </div>
+                </div>
+                <dl class="task-facts">
+                    <div><dt>Status</dt><dd>I gang</dd></div>
+                    <div><dt>Afdelings-ID</dt><dd>26-80</dd></div>
+                    <div><dt>Startdato</dt><dd>3. jun. 2026</dd></div>
+                    <div><dt>Slutdato</dt><dd>--.--.--</dd></div>
+                    <div class="fact-wide"><dt>Oprettet af</dt><dd>Alex Morgan</dd><small>Bruger #7</small></div>
+                </dl>
+                <section class="detail-section">
+                    <h3>Lokation</h3>
+                    <p class="eyebrow">Lokation #31</p>
+                    <p>10 Market Street<br />10001 <span>·</span> New York</p>
+                    <button class="button button-light location-button" type="button">Se lokation</button>
+                </section>
+                <section class="detail-section related-section">
+                    <h3>Relaterede poster</h3>
+                    <p>6,5 timer <span>·</span> 3 tidsregistreringer</p>
+                    <div class="related-actions">
+                        <button class="button button-light" type="button">Se tidsregistreringer</button>
+                        <button class="button button-light" type="button">Opgavenoter</button>
+                    </div>
+                </section>
+                <p class="detail-breadcrumb">Projekt #204 <span>·</span> Kontoretablering</p>
+            </aside>
+        </div>
+    </main>
+</div>

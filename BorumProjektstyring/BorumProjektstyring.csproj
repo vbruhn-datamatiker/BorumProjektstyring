@@ -7,4 +7,8 @@
     <UserSecretsId>2ea36d60-3ecc-45a4-acf4-617f0d65093b</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLib\ClassLib.csproj" />
+  </ItemGroup>
+
 </Project>
