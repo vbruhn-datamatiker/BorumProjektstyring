@@ -7,7 +7,7 @@
 <div class="project-page">
     <header class="topbar">
         <nav class="breadcrumbs" aria-label="Brødkrummesti">
-            <a href="#">Kunder</a>
+            <a href="#">Projekter</a>
             <span>/</span>
 
            @*--TODO Add Status to base class and database*@
@@ -16,9 +16,9 @@
 
            @*--TODO need to add project owner.*@
 
-            <a href="#">Acme Industries</a>
-            <span>/</span>
-            <span aria-current="page">Kontoretablering</span>
+
+      
+   
         </nav>
         <div class="topbar-actions">
             <label class="visually-hidden" for="global-search">Søg</label>
@@ -32,9 +32,8 @@
     <main class="project-content">
         <section class="project-heading">
             <div>
-                <h1>Kunde: </h1>
-                <p class="project-meta">Projekt #204 <span>·</span> Type: Implementering <span>·</span> Startdato: 1. jun. 2026</p>
-                <p class="project-history">Historik: Den indledende afklaring er afsluttet; installationen gik i gang.</p>
+                <h1>Alle projekter </h1>
+              
             </div>
 
             
@@ -80,12 +79,15 @@
                                     <label for="newProjectCustomerId">Kunde-ID</label>
                                     <input id="newProjectCustomerId" name="customerId" type="number" class="form-control" min="1" required />
                                 </div>
-
-                                //TODO : Missing AddScope to rember the customer. 
-
                                 <div class="project-form-field">
-                                    <label for="newProjectUserId">Ansvarlig-ID</label>
-                                    <input id="newProjectUserId" name="userId" type="number" class="form-control" min="1" required />
+                                    <label for="newProjectUserId">Ansvarlig</label>
+                                    <select id="newProjectUserId" name="userId" class="form-select" required>
+                                        <option value="">Vælg ansvarlig</option>
+                                        @foreach (var user in Model.Users.OrderBy(user => user.Name))
+                                        {
+                                            <option value="@user.UserId">@user.Name</option>
+                                        }
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -98,18 +100,6 @@
             </div>
         </div>
 
-        <section class="customer-summary" aria-label="Kundeoplysninger">
-            <div class="customer-primary">
-                <strong>Acme Industries <span>·</span> Kunde #12</strong>
-                <span>Kontakt: Jordan Smith</span>
-            </div>
-            <div class="customer-contact">
-                <a href="mailto:jordan@example.com">jordan@example.com</a>
-                <a href="tel:+12025550142">+1 202 555 0142</a>
-            </div>
-            <a class="customer-website" href="https://www.example.com">www.example.com</a>
-            <button class="button button-light customer-button" type="button">Se kunde</button>
-        </section>
 
         <div class="project-workspace">
             <div class="project-main-column">
@@ -137,13 +127,17 @@
                                 }
                             </select>
 
-                            <!--creates a dropdown menu for Anslarlig for the project-->
-                            <label class="visually-hidden" for="assignee-filter">Ansvarlig-ID</label>
+                            <!-- Filter projects by the responsible user's name -->
+                            <label class="visually-hidden" for="assignee-filter">Ansvarlig</label>
                             <select id="assignee-filter">
-                                <option value="">Ansvarlig-ID: Alle</option>
-                                @foreach (var userId in Model.Projects.Select(project => project.UserId).Distinct().OrderBy(userId => userId))
+                                <option value="">Ansvarlig: Alle</option>
+                                @foreach (var userName in Model.Projects
+                                    .Select(project => project.User?.Name)
+                                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                                    .Distinct()
+                                    .OrderBy(name => name))
                                 {
-                                    <option value="@userId">@userId</option>
+                                    <option value="@userName">@userName</option>
                                 }
                             </select>
 
@@ -165,6 +159,10 @@
                             <button id="project-name-sort" class="sort-button" type="button" data-sort-direction="desc" aria-label="Sorter efter projektnavn, faldende">Projektnavn <span aria-hidden="true">↓</span></button>
                         </div>
                     </div>
+
+
+
+
                     <div class="table-scroll">
                         <table class="tasks-table">
                             <thead>
@@ -174,19 +172,26 @@
                                     <th scope="col">Type</th>
                                     <th scope="col">Startdato</th>
                                     <th scope="col">Kunde</th>
-                                    <th scope="col">Ansvarlig-ID</th>
+                                    <th scope="col">Ansvarlig</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var project in Model.Projects.OrderByDescending(project => project.ProjectTitle))
                                 {
-                                    <tr data-project-name="@project.ProjectTitle" data-project-type="@project.Type" data-user-id="@project.UserId" data-customer-name="@project.Customer?.Name">
-                                        <td>@project.ProjectTitle</td>
+                                    <tr data-project-id="@project.ProjectId"
+                                        data-project-name="@project.ProjectTitle"
+                                        data-project-type="@project.Type"
+                                        data-project-start-date="@project.StartDate.ToString("dd-MM-yyyy")"
+                                        data-project-history="@project.History"
+                                        data-user-name="@project.User?.Name"
+                                        data-customer-id="@project.CustomerId"
+                                        data-customer-name="@project.Customer?.Name">
+                                        <td><button class="project-select-button" type="button">@project.ProjectTitle</button></td>
                                         <td>#@project.ProjectId</td>
                                         <td>@project.Type</td>
                                         <td>@project.StartDate.ToString("dd-MM-yyyy")</td>
                                         <td>@project.Customer?.Name</td>
-                                        <td>@project.UserId</td>
+                                        <td>@project.User?.Name</td>
                                     </tr>
                                 }
                             </tbody>
@@ -195,38 +200,68 @@
 
                     <!--Script for the acsending and desending list after name  (do we want this)?-->
                     <script>
-                        const projectNameSortButton = document.getElementById("project-name-sort");
-                        const projectRowsBody = document.querySelector(".tasks-table tbody");
-                        const projectNameSortIcon = projectNameSortButton.querySelector("span");
-                        const projectRows = Array.from(projectRowsBody.rows);
-                        const projectFilters = [
-                            { element: document.getElementById("type-filter"), attribute: "projectType" },
-                            { element: document.getElementById("assignee-filter"), attribute: "userId" },
-                            { element: document.getElementById("customer-filter"), attribute: "customerName" }
-                        ];
+                        document.addEventListener("DOMContentLoaded", () => {
+                            const projectNameSortButton = document.getElementById("project-name-sort");
+                            const projectRowsBody = document.querySelector(".tasks-table tbody");
+                            const projectNameSortIcon = projectNameSortButton.querySelector("span");
+                            const projectRows = Array.from(projectRowsBody.rows);
+                            const projectDetailsPlaceholder = document.getElementById("project-details-placeholder");
+                            const projectDetailsContent = document.getElementById("project-details-content");
+                            const projectDetailFields = {
+                                id: document.getElementById("project-detail-id"),
+                                title: document.getElementById("project-detail-title"),
+                                type: document.getElementById("project-detail-type"),
+                                startDate: document.getElementById("project-detail-start-date"),
+                                customer: document.getElementById("project-detail-customer"),
+                                customerId: document.getElementById("project-detail-customer-id"),
+                                userName: document.getElementById("project-detail-user-name"),
+                                history: document.getElementById("project-detail-history")
+                            };
+                            const projectFilters = [
+                                { element: document.getElementById("type-filter"), attribute: "projectType" },
+                                { element: document.getElementById("assignee-filter"), attribute: "userName" },
+                                { element: document.getElementById("customer-filter"), attribute: "customerName" }
+                            ];
 
-                        const applyProjectFilters = () => {
-                            projectRows.forEach(row => {
-                                row.hidden = projectFilters.some(({ element, attribute }) =>
-                                    element.value && row.dataset[attribute] !== element.value);
+                            const showProjectDetails = row => {
+                                projectRows.forEach(projectRow => projectRow.classList.toggle("selected-row", projectRow === row));
+                                projectDetailFields.id.textContent = `#${row.dataset.projectId}`;
+                                projectDetailFields.title.textContent = row.dataset.projectName;
+                                projectDetailFields.type.textContent = row.dataset.projectType || "Ikke angivet";
+                                projectDetailFields.startDate.textContent = row.dataset.projectStartDate;
+                                projectDetailFields.customer.textContent = row.dataset.customerName || "Ikke angivet";
+                                projectDetailFields.customerId.textContent = row.dataset.customerId;
+                                projectDetailFields.userName.textContent = row.dataset.userName || "Ikke angivet";
+                                projectDetailFields.history.textContent = row.dataset.projectHistory || "Ingen historik angivet.";
+                                projectDetailsPlaceholder.hidden = true;
+                                projectDetailsContent.hidden = false;
+                            };
+
+                            projectRows.forEach(row => row.addEventListener("click", () => showProjectDetails(row)));
+
+                            const applyProjectFilters = () => {
+                                projectRows.forEach(row => {
+                                    row.hidden = projectFilters.some(({ element, attribute }) =>
+                                        element.value && row.dataset[attribute] !== element.value);
+                                });
+                            };
+
+                            projectFilters.forEach(({ element }) => element.addEventListener("change", applyProjectFilters));
+
+                            projectNameSortButton.addEventListener("click", () => {
+                                const direction = projectNameSortButton.dataset.sortDirection === "asc" ? "desc" : "asc";
+                                const rows = Array.from(projectRowsBody.rows);
+
+                                rows.sort((a, b) => {
+                                    const nameDifference = a.dataset.projectName.localeCompare(b.dataset.projectName, "da", { sensitivity: "base" });
+                                    return direction === "asc" ? nameDifference : -nameDifference;
+                                });
+
+                                projectRowsBody.append(...rows);
+                                projectNameSortButton.dataset.sortDirection = direction;
+                                projectNameSortButton.setAttribute("aria-label", `Sorter efter projektnavn, ${direction === "asc" ? "stigende" : "faldende"}`);
+                                projectNameSortIcon.textContent = direction === "asc" ? "↑" : "↓";
                             });
-                        };
-
-                        projectFilters.forEach(({ element }) => element.addEventListener("change", applyProjectFilters));
-
-                        projectNameSortButton.addEventListener("click", () => {
-                            const direction = projectNameSortButton.dataset.sortDirection === "asc" ? "desc" : "asc";
-                            const rows = Array.from(projectRowsBody.rows);
-
-                            rows.sort((a, b) => {
-                                const nameDifference = a.dataset.projectName.localeCompare(b.dataset.projectName, "da", { sensitivity: "base" });
-                                return direction === "asc" ? nameDifference : -nameDifference;
-                            });
-
-                            projectRowsBody.append(...rows);
-                            projectNameSortButton.dataset.sortDirection = direction;
-                            projectNameSortButton.setAttribute("aria-label", `Sorter efter projektnavn, ${direction === "asc" ? "stigende" : "faldende"}`);
-                            projectNameSortIcon.textContent = direction === "asc" ? "↑" : "↓";
                         });
                     </script>
 
@@ -253,40 +288,35 @@
                 </section>
             </div>
 
-            <aside class="panel task-details" aria-labelledby="task-details-heading">
+            <aside class="panel project-details" aria-labelledby="project-details-heading">
                 <div class="details-heading">
                     <div>
-                        <p class="eyebrow">Valgt opgave</p>
-                        <h2 id="task-details-heading">Opgave #104</h2>
-                        <p class="task-type">Installation</p>
+                        <p class="eyebrow">Valgt projekt</p>
+                        <h2 id="project-details-heading">Projektoplysninger</h2>
                     </div>
                     <div class="details-actions">
                         <button class="button button-light" type="button">Rediger</button>
                         <button class="button button-light" type="button">Slet</button>
                     </div>
                 </div>
-                <dl class="task-facts">
-                    <div><dt>Status</dt><dd>I gang</dd></div>
-                    <div><dt>Afdelings-ID</dt><dd>26-80</dd></div>
-                    <div><dt>Startdato</dt><dd>3. jun. 2026</dd></div>
-                    <div><dt>Slutdato</dt><dd>--.--.--</dd></div>
-                    <div class="fact-wide"><dt>Oprettet af</dt><dd>Alex Morgan</dd><small>Bruger #7</small></div>
-                </dl>
-                <section class="detail-section">
-                    <h3>Lokation</h3>
-                    <p class="eyebrow">Lokation #31</p>
-                    <p>10 Market Street<br />10001 <span>·</span> New York</p>
-                    <button class="button button-light location-button" type="button">Se lokation</button>
-                </section>
-                <section class="detail-section related-section">
-                    <h3>Relaterede poster</h3>
-                    <p>6,5 timer <span>·</span> 3 tidsregistreringer</p>
-                    <div class="related-actions">
-                        <button class="button button-light" type="button">Se tidsregistreringer</button>
-                        <button class="button button-light" type="button">Opgavenoter</button>
+                <p id="project-details-placeholder" class="project-details-placeholder">Vælg et projekt på listen for at se oplysningerne her.</p>
+                <div id="project-details-content" hidden>
+                    <div class="project-title-block">
+                        <h3 id="project-detail-title"></h3>
+                        <p id="project-detail-type" class="project-detail-type"></p>
                     </div>
-                </section>
-                <p class="detail-breadcrumb">Projekt #204 <span>·</span> Kontoretablering</p>
+                    <dl class="project-facts">
+                        <div><dt>Projekt-ID</dt><dd id="project-detail-id"></dd></div>
+                        <div><dt>Startdato</dt><dd id="project-detail-start-date"></dd></div>
+                        <div><dt>Kunde</dt><dd id="project-detail-customer"></dd></div>
+                        <div><dt>Kunde-ID</dt><dd id="project-detail-customer-id"></dd></div>
+                        <div class="fact-wide"><dt>Ansvarlig</dt><dd id="project-detail-user-name"></dd></div>
+                    </dl>
+                    <section class="project-history-details">
+                        <h3>Historik</h3>
+                        <p id="project-detail-history"></p>
+                    </section>
+                </div>
             </aside>
         </div>
     </main>

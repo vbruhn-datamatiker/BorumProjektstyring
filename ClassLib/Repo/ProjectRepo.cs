@@ -38,6 +38,8 @@ namespace ClassLib.Repo
         {
             return _context.Projects
                 .Include(project => project.Customer)
+
+                .Include(project => project.User)
                 .ToList();
         }
 
@@ -65,6 +67,25 @@ namespace ClassLib.Repo
         public List<Project> GetProjectsByCustomerId(int customerId)
         {
             return _context.Projects.Where(p => p.CustomerId == customerId).ToList();
+        }
+
+        /// <summary>
+        /// Assigns an existing user to a project.
+        /// </summary>
+        public Project? AddUserToProject(int projectId, int userId)
+        {
+            var project = _context.Projects.Find(projectId);
+            var user = _context.Users.Find(userId);
+
+            if (project == null || user == null)
+            {
+                return null;
+            }
+
+            project.UserId = user.UserId;
+            project.User = user;
+            _context.SaveChanges();
+            return project;
         }
 
     }

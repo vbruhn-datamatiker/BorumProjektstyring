@@ -27,10 +27,12 @@ public class ProjectPageModel : PageModel
     public string History { get; set; }
 
     public List<Project> Projects { get; private set; } = new List<Project>();
+    public List<User> Users { get; private set; } = new List<User>();
 
     public void OnGet()
     {
         Projects = _projectRepo.GetAll();
+        Users = new UserRepo().GetAll();
     }
 
     public IActionResult OnPostCreateProject(string projectTitle, string type, DateTime startDate, string history, int customerId, int userId)
@@ -44,7 +46,9 @@ public class ProjectPageModel : PageModel
             CustomerId = customerId,
             UserId = userId
         };
+
         _projectRepo.Add(newProject);
+
         return RedirectToPage("/ProjectPage");
     }
 }
