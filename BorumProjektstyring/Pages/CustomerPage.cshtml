@@ -52,42 +52,42 @@
                             @* NEW CUSTOMER NAME *@
                             <div class="customer-form-field">
                                 <label asp-for="NewCustomer.Name">Kundenavn</label> @* asp-for keeps what was typed if there is an error*@
-                                <input id="NewCustomer.Name" class="form-control" required maxlength="150" />
+                                <input asp-for="NewCustomer.Name" class="form-control" required maxlength="150" />
                                 <span asp-validation-for="NewCustomer.Name" class="text-danger"></span> @* asp-validation-for shows exception message under the right field*@
                             </div>
 
                             @* CONTACT PERSON *@
                             <div class="customer-form-field">
                                 <label asp-for="NewCustomer.ContactPerson">Kontaktperson</label>
-                                <input id="NewCustomer.ContactPerson" class="form-control" maxlength="150" required />
+                                <input asp-for="NewCustomer.ContactPerson" class="form-control" maxlength="150" required />
                                 <span asp-validation-for="NewCustomer.ContactPerson" class="text-danger"></span>
                             </div>
 
                             @* EMAIL *@
                             <div class="customer-form-field">
                                 <label asp-for="NewCustomer.Email">Email</label>
-                                <input id="NewCustomer.Email" class="form-control" type="email" maxlength="256" required />
+                                <input asp-for="NewCustomer.Email" class="form-control" type="email" maxlength="256" required />
                                 <span asp-validation-for="NewCustomer.Email" class="text-danger"></span>
                             </div>
 
                             @* PHONE *@
                             <div class="customer-form-field">
                                 <label asp-for="NewCustomer.Phone">Telefon</label>
-                                <input id="NewCustomer.Phone" class="form-control" type="tel" maxlength="50" required />
+                                <input asp-for="NewCustomer.Phone" class="form-control" type="tel" maxlength="50" required />
                                 <span asp-validation-for="NewCustomer.Phone" class="text-danger"></span>
                             </div>
 
                             @* WEBSITE *@
                             <div class="customer-form-field">
                                 <label asp-for="NewCustomer.Website">Hjemmeside</label>
-                                <input id="NewCustomer.Website" class="form-control" maxlength="225" required />
+                                <input asp-for="NewCustomer.Website" class="form-control" maxlength="25" required />
                                 <span asp-validation-for="NewCustomer.Website" class="text-danger"></span>
                             </div>
 
                             @* OWNER ID *@
                             <div class="customer-form-field">
                                 <label asp-for="NewCustomer.OwnerId">Ansvarlig-ID</label>
-                                <input id="NewCustomer.OwnerId" class="form-control" type="number" min="1" required />
+                                <input asp-for="NewCustomer.OwnerId" class="form-control" type="number" min="1" required />
                                 <span asp-validation-for="NewCustomer.OwnerId" class="text-danger"></span>
                             </div>
 
@@ -124,6 +124,10 @@
 </div>
 
 @section Scripts {
-    new bootstrap.Modal(document.getElementById("createCustomerModal")).show();
-
+    @if (Model.ShowCreateModal)
+    {
+        <script>
+        new bootstrap.Modal(document.getElementById("createCustomerModal")).show();
+        </script>
+    }
 }
