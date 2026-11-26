@@ -26,37 +26,46 @@
 
     <div class="profile-grid">
         <section class="profile-card profile-card--details" aria-labelledby="personal-details-heading">
-            <div class="profile-card__body">
-                <div class="profile-card__header">
-                    <div>
-                        <h2 id="personal-details-heading">Personlige oplysninger</h2>
-                        <p>Hold dine oplysninger opdaterede, så kolleger kan kontakte dig.</p>
+            <form method="post" asp-page-handler="User">
+                <div class="profile-card__body">
+                    <div class="profile-card__header">
+                        <div>
+                            <h2 id="personal-details-heading">Personlige oplysninger</h2>
+                            <p>Hold dine oplysninger opdaterede, så kolleger kan kontakte dig.</p>
+                        </div>
+                        <span class="profile-user-badge">Bruger #7</span>
                     </div>
-                    <span class="profile-user-badge">Bruger #7</span>
+
+                    @if (!string.IsNullOrEmpty(Model.UserSuccess))
+                    {
+                        <p class="profile-message profile-message--success" aria-live="polite">@Model.UserSuccess</p>
+                    }
+
+                    <div class="profile-fields">
+                        <div class="profile-field">
+                            <label for="profile-name">Navn</label>
+                            <input id="profile-name" type="text" asp-for="Profile.Username" />
+                            <span asp-validation-for="Profile.Username" class="profile-message profile-message--error"></span>
+                        </div>
+
+                        <div class="profile-field">
+                            <label for="profile-email">E-mail</label>
+                            <input id="profile-email" type="email" asp-for="Profile.Email" />
+                            <span asp-validation-for="Profile.Email" class="profile-message profile-message--error"></span>
+                        </div>
+
+                        <div class="profile-field">
+                            <label for="profile-phone">Telefon</label>
+                            <input id="profile-phone" type="tel" asp-for="Profile.Phone" />
+                        </div>
+                    </div>
                 </div>
 
-                <div class="profile-fields">
-                    <div class="profile-field">
-                        <label for="profile-name">Navn</label>
-                        <input id="profile-name" type="text" asp-for="Username" />
-                    </div>
-
-                    <div class="profile-field">
-                        <label for="profile-email">E-mail</label>
-                        <input id="profile-email" type="email" asp-for="Email" />
-                    </div>
-
-                    <div class="profile-field">
-                        <label for="profile-phone">Telefon</label>
-                        <input id="profile-phone" type="tel" asp-for="Phone" />
-                    </div>
+                <div class="profile-card__actions">
+                    <button class="profile-button profile-button--primary" type="submit">Gem ændringer</button>
+                    <button class="profile-button profile-button--secondary" type="reset">Annuller</button>
                 </div>
-            </div>
-
-            <div class="profile-card__actions">
-                <button class="profile-button profile-button--primary" type="button">Gem ændringer</button>
-                <button class="profile-button profile-button--secondary" type="button">Annuller</button>
-            </div>
+            </form>
         </section>
 
         <div class="profile-sidebar">
@@ -89,21 +98,21 @@
                                 <div asp-validation-summary="ModelOnly" class="profile-message profile-message--error" role="alert"></div>
 
                                 <div class="profile-field">
-                                    <label asp-for="CurrentPassword">Nuværende adgangskode</label>
-                                    <input asp-for="CurrentPassword" type="password" autocomplete="off" />
-                                    <span asp-validation-for="CurrentPassword" class="profile-message profile-message--error"></span>
+                                    <label asp-for="Password.CurrentPassword">Nuværende adgangskode</label>
+                                    <input asp-for="Password.CurrentPassword" type="password" autocomplete="off" />
+                                    <span asp-validation-for="Password.CurrentPassword" class="profile-message profile-message--error"></span>
                                 </div>
 
                                 <div class="profile-field">
-                                    <label asp-for="NewPassword">Ny adgangskode</label>
-                                    <input asp-for="NewPassword" type="password" autocomplete="new-password" />
-                                    <span asp-validation-for="NewPassword" class="profile-message profile-message--error"></span>
+                                    <label asp-for="Password.NewPassword">Ny adgangskode</label>
+                                    <input asp-for="Password.NewPassword" type="password" autocomplete="new-password" />
+                                    <span asp-validation-for="Password.NewPassword" class="profile-message profile-message--error"></span>
                                 </div>
 
                                 <div class="profile-field">
-                                    <label asp-for="ConfirmNewPassword">Bekræft ny adgangskode</label>
-                                    <input asp-for="ConfirmNewPassword" type="password" autocomplete="new-password" />
-                                    <span asp-validation-for="ConfirmNewPassword" class="profile-message profile-message--error"></span>
+                                    <label asp-for="Password.ConfirmNewPassword">Bekræft ny adgangskode</label>
+                                    <input asp-for="Password.ConfirmNewPassword" type="password" autocomplete="new-password" />
+                                    <span asp-validation-for="Password.ConfirmNewPassword" class="profile-message profile-message--error"></span>
                                 </div>
 
                                 <div class="profile-dialog__actions">

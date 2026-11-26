@@ -5,8 +5,6 @@ using ClassLib.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 using System.Security.Claims;
 
 namespace BorumProjektstyring.Pages
@@ -26,35 +24,22 @@ namespace BorumProjektstyring.Pages
         }
 
         [BindProperty]
-        public string? Username { get; set; }
+        public ProfileInput Profile { get; set; } = new();
 
         [BindProperty]
-        public string? Password { get; set; }
-
-        [BindProperty]
-        [Required(ErrorMessage = "Indtast din nuværende adgangskode.")]
-        public string? CurrentPassword { get; set; }
-
-        [BindProperty]
-        public string? Email { get; set; }
-
-        [BindProperty]
-        public string? Phone { get; set; }
-
-        [BindProperty]
-        [Required(ErrorMessage = "Indtast en ny adgangskode.")]
-        public string? NewPassword { get; set; }
-
-        [BindProperty]
-        [Required(ErrorMessage = "Bekræft den nye adgangskode.")]
-        [Compare(nameof(NewPassword), ErrorMessage = "De nye adgangskoder er ikke ens.")]
-        public string? ConfirmNewPassword { get; set; }
+        public PasswordInput Password { get; set; } = new();
 
         public string PasswordError { get; private set; }
 
         public string PasswordSuccess { get; private set; }
 
+        public string UserSuccess { get; private set; }
+
         public bool PasswordDialogOpen { get; private set; }
+
+        public int UserId { get; private set; }
+
+
 
 
         public IActionResult OnGet()
@@ -76,9 +61,10 @@ namespace BorumProjektstyring.Pages
 
             // Need to update database so User and UserAuth are in sync, as emails are not the same on these tables.
             // This is a temporary solution until we have a better way to handle this.
-            Username = user.Name;
-            Email = userAuth.Username;
-            Phone = user.Phone;
+            Profile.Username = user.Name;
+            Profile.Email = userAuth.Username;
+            Profile.Phone = user.Phone;
+            UserId = userId;
 
             return Page();
         }
@@ -102,17 +88,18 @@ namespace BorumProjektstyring.Pages
                 return RedirectToPage("/Login");
             }
 
-            if (!ModelState.IsValid)
+            ModelState.Clear();
+            if (!TryValidateModel(Password, nameof(Password)))
             {
                 LoadProfileValues();
                 return Page();
             }
 
-            if (!_userService.AuthenticateUser(username, CurrentPassword!))
+            if (!_userService.AuthenticateUser(username, Password.CurrentPassword!))
             {
                 PasswordError = "Den nuværende adgangskode er forkert.";
             }
-            else if (_userService.ChangePasswordHash(username, NewPassword!) == null)
+            else if (_userService.ChangePasswordHash(username, Password.NewPassword!) == null)
             {
                 PasswordError = "Adgangskoden kunne ikke ændres.";
             }
@@ -121,11 +108,46 @@ namespace BorumProjektstyring.Pages
                
                 PasswordSuccess = "Adgangskode er ændret.";
                 PasswordDialogOpen = false;
-                CurrentPassword = string.Empty;
-                NewPassword = string.Empty;
-                ConfirmNewPassword = string.Empty;
+                Password = new PasswordInput();
             }
 
+            LoadProfileValues();
+            return Page();
+        }
+
+        public IActionResult OnPostUser()
+        {
+            var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdValue, out var userId))
+            {
+                return RedirectToPage("/Login");
+            }
+            var user = _userRepo.GetById(userId);
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            var userAuth = _userAuthRepo.GetById(userId);
+            if (userAuth is null)
+            {
+                return NotFound();
+            }
+
+            ModelState.Clear();
+            if (!TryValidateModel(Profile, nameof(Profile)))
+            {
+                return Page();
+            }
+
+            user.Name = Profile.Username!;
+            user.Email = Profile.Email!;
+            user.Phone = Profile.Phone!;
+            userAuth.Username = Profile.Email!;
+
+            _userRepo.Update(user, userId);
+            _userAuthRepo.Update(userAuth, userId);
+            UserSuccess = "Dine oplysninger er opdateret.";
             LoadProfileValues();
             return Page();
         }
@@ -149,9 +171,9 @@ namespace BorumProjektstyring.Pages
 
             // Need to update database so User and UserAuth are in sync, as emails are not the same on these tables.
             // This is a temporary solution until we have a better way to handle this.
-            Username = user.Name;
-            Email = userAuth?.Username;
-            Phone = user.Phone;
+            Profile.Username = user.Name;
+            Profile.Email = userAuth?.Username;
+            Profile.Phone = user.Phone;
         }
 
 
