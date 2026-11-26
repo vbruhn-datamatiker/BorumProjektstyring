@@ -232,4 +232,67 @@
     }
 }
 
+/*-- Create customer fields--*/
 
+.customer-modal .modal-content {
+    overflow: hidden;
+    color: #3f3f3f;
+    border: 1px solid #d5d5d5;
+    border-radius: .25rem;
+    box-shadow: 0 .75rem 2rem rgba(0,0,0,.16);
+}
+
+.customer-modal .modal-header, .customer-modal .modal-footer {
+    padding: .9rem 1rem;
+    border-color: #e2e2e2;
+}
+
+.customer-modal .modal-footer {
+    gap: .45rem;
+}
+
+.customer-modal .modal-title {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+}
+
+.customer-form {
+    display: grid;
+    gap: .8rem;
+    padding: 1rem;
+}
+
+.customer-form-field {
+    display: grid;
+    gap: .3rem;
+}
+
+    .customer-form-field label {
+        color: #555;
+        font-size: .68rem;
+        font-weight: 550;
+    }
+
+    .customer-form-field .form-control {
+        min-height: 34px;
+        border-color: #ccc;
+        border-radius: .2rem;
+        font-size: .72rem;
+    }
+
+    .customer-form-field .text-danger {
+        font-size: .65rem;
+    }
+
+.customer-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .75rem;
+}
+
+@media (max-width: 520px) {
+    .customer-form-row {
+        grid-template-columns: 1fr;
+    }
+}

@@ -18,6 +18,7 @@ namespace ClassLib.Repo
 
         public Customer Add(Customer entity)
         {
+            // Calls validation before customer is created
             entity.Validate();
             _context.Customers.Add(entity);
             _context.SaveChanges();
