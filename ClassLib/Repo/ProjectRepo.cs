@@ -11,9 +11,9 @@ namespace ClassLib.Repo
     {
 
         private BorumBygDBContext _context;
-        public ProjectRepo()
+        public ProjectRepo(BorumBygDBContext context)
         {
-            _context = new BorumBygDBContext();
+            _context = context;
         }
 
         public Project Add(Project entity)
@@ -38,7 +38,6 @@ namespace ClassLib.Repo
         {
             return _context.Projects
                 .Include(project => project.Customer)
-
                 .Include(project => project.User)
                 .ToList();
         }

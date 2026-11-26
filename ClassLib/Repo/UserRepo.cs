@@ -12,9 +12,9 @@ namespace ClassLib.Repo
     {
         private BorumBygDBContext _context;
 
-        public UserRepo()
+        public UserRepo(BorumBygDBContext context)
         {
-            _context = new BorumBygDBContext();
+            _context = context;
         }
 
         public User Add(User entity)

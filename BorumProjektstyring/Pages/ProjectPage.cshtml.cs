@@ -9,10 +9,13 @@ namespace BorumProjektstyring.Pages;
 public class ProjectPageModel : PageModel
 {
     private readonly ProjectRepo _projectRepo;
+    private readonly UserRepo _userRepo;
 
-    public ProjectPageModel()
+
+    public ProjectPageModel(ProjectRepo projectRepo, UserRepo userRepo)
     {
-        _projectRepo = new ProjectRepo();
+        _projectRepo = projectRepo;
+        _userRepo = userRepo;
     }
 
     [BindProperty]
@@ -39,7 +42,7 @@ public class ProjectPageModel : PageModel
         bool showCreateForm = false)
     {
         AllProjects = _projectRepo.GetAll();
-        Users = new UserRepo().GetAll();
+        Users = _userRepo.GetAll();
         TypeFilter = typeFilter ?? string.Empty;
         AssigneeFilter = assigneeFilter ?? string.Empty;
         CustomerFilter = customerFilter ?? string.Empty;

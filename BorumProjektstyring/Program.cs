@@ -1,3 +1,6 @@
+using ClassLib.Model;
+using ClassLib.Repo;
+
 namespace BorumProjektstyring
 {
     public class Program
@@ -6,8 +9,16 @@ namespace BorumProjektstyring
         {
             var builder = WebApplication.CreateBuilder(args);
 
+    
+
             // Add services to the container.
             builder.Services.AddRazorPages();
+
+            builder.Services.AddDbContext<BorumBygDBContext>();
+
+            builder.Services.AddScoped<ProjectRepo>();
+            builder.Services.AddScoped<UserRepo>();
+
 
             var app = builder.Build();
 

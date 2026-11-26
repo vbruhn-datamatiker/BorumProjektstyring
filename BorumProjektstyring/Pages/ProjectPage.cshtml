@@ -155,8 +155,8 @@
                                asp-route-customerFilter="@Model.CustomerFilter"
                                asp-route-sortDirection="@Model.NextSortDirection"
                                asp-route-selectedProjectId="@Model.SelectedProject?.ProjectId"
-                               aria-label="Sorter efter projektnavn, @(Model.NextSortDirection == "asc" ? "stigende" : "faldende")">
-                                Projektnavn <span aria-hidden="true">@(Model.NextSortDirection == "asc" ? "↑" : "↓")</span>
+                               aria-label="Sorter efter projektnavn, @(Model.SortDirection == "asc" ? "stigende" : "faldende")">
+                                Projektnavn <span aria-hidden="true">@(Model.SortDirection == "asc" ? "↑" : "↓")</span>
                             </a>
                         </form>
                     </div>
