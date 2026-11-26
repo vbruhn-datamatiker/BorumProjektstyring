@@ -7,5 +7,6 @@ namespace ClassLib.Repo
 {
     public class CustomerRepo : IRepo<Customer>
     {
+        //
     }
 }
