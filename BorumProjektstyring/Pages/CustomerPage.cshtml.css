@@ -136,8 +136,22 @@
     }
 
 .customer-button {
-    min-width: 95px;
+    min-width: 150px;
+    min-height: 36px;
+    padding: .45rem 1rem;
+    color: #333;
+    background: #fff;
+    border: 1px solid #cecece;
+    border-radius: .25rem;
+    font-size: .8rem;
+    text-decoration: none; /* removes the link underline */
 }
+
+    .customer-button:hover {
+        color: #333; /* stops it turning blue on hover */
+        background: #f5f5f5;
+        text-decoration: none;
+    }
 
 /* --- generated css. new for the customer list --- */
 .customer-content {

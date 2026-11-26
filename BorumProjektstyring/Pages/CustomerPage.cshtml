@@ -117,6 +117,9 @@
                         <span>@c.Phone</span>
                     </div>
                     <span class="customer-website">@c.Website</span>
+                    
+                    @* LINK BUTTON to CustomerDetailsPage*@
+                    <a class="button button-light customer-button" href="@Url.Page("/CustomerDetailsPage", new { id = c.CustomerId })">Se kunde</a>
                 </section>
             }
         </div>
