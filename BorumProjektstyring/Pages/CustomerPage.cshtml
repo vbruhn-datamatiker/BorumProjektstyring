@@ -1,4 +1,46 @@
 ﻿@page
 @model BorumProjektstyring.Pages.CustomerPageModel
 @{
+    ViewData["Title"] = "Kunder";
 }
+
+<div class="customer-page">
+    <header class="topbar">
+        <nav class="breadcrumbs" aria-label="Brødkrummesti">
+            <a asp-page="/CustomerPage">Kunder</a>
+        </nav>
+
+        @* COPY the whole <div class="topbar-actions"> ... </div> from ProjectPage.cshtml here (search, Log ud, Profil, avatar) *@
+            <div class="topbar-actions">
+                <label class="visually-hidden" for="global-search">Søg</label>
+                <input id="global-search" class="search-input" type="search" placeholder="Søg i kunder, projekter og opgaver..." />
+                <button class="button button-light logout-button" type="button">Log ud <span aria-hidden="true">↪</span></button>
+                <button class="button button-light profile-button" type="button">Profil</button>
+                <span class="avatar" aria-label="Brugerprofil">♙</span>
+            </div>
+
+    </header>
+
+    <main class="customer-content">
+        <section class="customer-heading">
+            <h1>Alle Kunder</h1>
+        </section>
+
+        <div id="customer-list">
+            @foreach (var c in Model.Customers.OrderBy(c => c.Name))
+            {
+                <section class="customer-summary">
+                    <div class="customer-primary">
+                        <strong>@c.Name <span>·</span> Kunde #@c.CustomerId</strong>
+                        <span>Kontakt: @c.ContactPerson</span>
+                    </div>
+                    <div class="customer-contact">
+                        <span>@c.Email</span>
+                        <span>@c.Phone</span>
+                    </div>
+                    <span class="customer-website">@c.Website</span>
+                </section>
+            }
+        </div>
+    </main>
+</div>
