@@ -97,7 +97,8 @@ namespace ClassLib.Repo
         public TaskModel? GetById(int taskId)
         {
 
-            return _dbContext.Tasks.Include(task => task.Location) //Sørger for, at task'ens location også inkluderes til brug på selve hjemmesiden.
+            return _dbContext.Tasks
+                .Include(task => task.Location) //Sørger for, at task'ens location også inkluderes til brug på selve hjemmesiden.
                 .FirstOrDefault(task => task.TaskId == taskId);
         }
 
@@ -116,24 +117,55 @@ namespace ClassLib.Repo
         /// The task that was found and updated. Returns null if no task with
         /// the specified id exists.
         /// </returns>
-        public TaskModel Update(TaskModel task, int id)
+        public TaskModel Update(TaskModel newTask, int idOnTaskToUpdate)
         {
-            var taskToUpdate = GetById(id);
+            var taskToUpdate = GetById(idOnTaskToUpdate);
 
             if(taskToUpdate == null)
             {
-                throw new ArgumentNullException($"Error. A task with id {id} does not exist.");
+                throw new KeyNotFoundException($"Error. A task with id {idOnTaskToUpdate} does not exist.");
             }
 
-            if(taskToUpdate != null)
-            {
-                _dbContext.Entry(taskToUpdate).CurrentValues.SetValues(task);
-                _dbContext.SaveChanges();
-            }
+           
+                _dbContext.Entry(taskToUpdate).CurrentValues.SetValues(newTask);
+                _dbContext.SaveChanges(); //Fortæller EF Core, at ændringerne skal gemmes i vores database.  
 
-            
+
             return taskToUpdate;
+
+            //TODO: SKal hele Update-metoden ændres til, at Update kun gemmer ændringerne, vi foretager i Task.cshtml.cs og altså via brugerfladen? HVis ja, ser metoden sådan her ud:
+
+            /*
+             * public void Update(){
+                    _dbContext.SaveChanges();
+                }
+             * */
+
+
+            //TODO skal hele Update-metoden ændres, så jeg selv vælger, hvilke properties(værdier) der skal overskrives? Det ville så se sådan her ud:
+
+            //var taskToUpdate = GetById(idOnTaskToUpdate);
+
+            //if (taskToUpdate == null)
+            //{
+            //    throw new KeyNotFoundException(
+            //        $"Error. A task with id {idOnTaskToUpdate} does not exist.");
+            //}
+
+            //// Opdaterer kun de properties, brugeren må ændre
+            //taskToUpdate.Type = newTask.Type;
+            //taskToUpdate.Status = newTask.Status;
+            //taskToUpdate.EndDate = newTask.EndDate;
+
+            //// Opdaterer den eksisterende Location
+            //taskToUpdate.Location.Address = newTask.Location.Address;
+            //taskToUpdate.Location.PostalCode = newTask.Location.PostalCode;
+
+            //_dbContext.SaveChanges();
+
+            //return taskToUpdate;
         }
+
 
         //TODO Husk ToString-metoden skal være ens i alle repos
 

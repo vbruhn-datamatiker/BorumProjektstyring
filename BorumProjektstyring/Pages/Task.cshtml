@@ -65,6 +65,12 @@
 
                             @*//Knapper for "Slet" og "Rediger" opgaver *@
 
+                            @*//TODO tilføj og tilrettelæg alle de felter, som en bruger kan udfylde til update-formen herunder.
+                                Gør på samme måde som Ulrik, hvor den eksisterende opgaves info allerede står udfyldt i felterne,
+                                som brugeren så kan se og vælge selv at rette i. ?
+                                Husk fx en dropdown-menu for status!
+                            *@
+
                         </div><div class="small-actions">
                             <form method="post" asp-page-handler="Update">
                                 <input type="hidden" asp-for="TaskId" />
@@ -78,24 +84,33 @@
                             </form>
                         </div></div>
                         <div class="details-grid">
+
                             <div><span class="detail-label">Status</span>
                                 <span class="detail-value"> @Model.Status </span></div>
+
                                 <div><span class="detail-label"> Afdelings-Id </span>
                                     <span class="detail-value"> @Model.DepartmentId </span></div>
+
                             <div><span class="detail-label">Startdato</span>
                                 <span class="detail-value"> @Model.StartDate </span>
+
                                 </div><div><span class="detail-label">Slutdato</span>
                                     <span class="detail-value"> @Model.EndDate </span></div>
-                            <div><span class="detail-label">Oprettet af</span><span class="detail-value"> @Model.CreatorName </span>
+
+                            <div><span class="detail-label">Oprettet af</span>
+                                <span class="detail-value"> @Model.CreatorName </span>
                         <small class="detail-label">Bruger #@Model.CreatorUserId</small>
 
                         @*//TODO Husk at Koordinator (Projektkoordinator) skal sættes via kode - ikke skrevet som Jane Nielsen selv i HTML*@
 
                     </div><div><span class="detail-label">Projektkoordinator</span><span class="detail-value">Jane Nielsen</span></div>
                         </div>
+
                         <div class="location"><h3>Lokation</h3>
                             <span class="detail-label">Lokations-id: #@Model.LocationId </span><p> Adresse: @Model.LocationAddress <br> Postnummer: @Model.PostalCode </p>
                             <button class="outline-button">Google Maps</button><div class="map-placeholder">▧</div></div>
+
+
 
                                 @*//TODO Lav egen sektion for Noter, der selv henter ind og kalder på Noter*@
                         <div class="notes"><div class="notes-header"><strong>Noter</strong
