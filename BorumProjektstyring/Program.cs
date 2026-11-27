@@ -1,8 +1,6 @@
 using ClassLib.Model;
 using ClassLib.Repo;
 using ClassLib.Interface;
-using ClassLib.Model;
-using ClassLib.Repo;
 using ClassLib.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
