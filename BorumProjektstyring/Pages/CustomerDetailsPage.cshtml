@@ -1,0 +1,42 @@
+﻿@page "{id:int}"
+@model BorumProjektstyring.Pages.CustomerDetailsPageModel
+@{
+    ViewData["Title"] = Model.Customer.Name;
+}
+
+<div class="customer-page">
+    <header class="topbar">
+        <nav class="breadcrumbs" aria-label="Brødkrummesti">
+            <a asp-page="/CustomerPage">Kunder</a>
+            <span>/</span>
+            <span aria-current="page">@Model.Customer.Name</span>
+        </nav>
+        @* Copied the whole <div class="topbar-actions"> ... </div> from ProjectPage.cshtml here (search, Log ud, Profil, avatar) *@
+        <div class="topbar-actions">
+            <label class="visually-hidden" for="global-search">Søg</label>
+            <input id="global-search" class="search-input" type="search" placeholder="Søg i kunder, projekter og opgaver..." />
+            <button class="button button-light logout-button" type="button">Log ud <span aria-hidden="true">↪</span></button>
+            <button class="button button-light profile-button" type="button">Profil</button>
+            <span class="avatar" aria-label="Brugerprofil">♙</span>
+        </div>
+    </header>
+
+    @*---=== PAGE CONTENT ===---*@
+    <main class="customer-content">
+        <section class="customer-heading">
+            <h1>@Model.Customer.Name</h1>
+        </section>
+
+        <section class="customer-summary" aria-label="Kundeoplysninger">
+            <div class="customer-primary">
+                <strong>Kunde #@Model.Customer.CustomerId</strong>
+                <span>Kontakt: @Model.Customer.ContactPerson</span>
+            </div>
+            <div class="customer-contact">
+                <a href="mailto:@Model.Customer.Email">@Model.Customer.Email</a>
+                <a href="tel:@Model.Customer.Phone">@Model.Customer.Phone</a>
+            </div>
+            <span class="customer-website">@Model.Customer.Website</span>
+        </section>
+    </main>
+</div>

@@ -1,0 +1,138 @@
+﻿@page
+@model BorumProjektstyring.Pages.CustomerPageModel
+@{
+    ViewData["Title"] = "Kunder";
+}
+
+<div class="customer-page">
+    <header class="topbar">
+        <nav class="breadcrumbs" aria-label="Brødkrummesti">
+            <a asp-page="/CustomerPage">Kunder</a>
+        </nav>
+
+        @* Copied the whole <div class="topbar-actions"> ... </div> from ProjectPage.cshtml here (search, Log ud, Profil, avatar) *@
+            <div class="topbar-actions">
+                <label class="visually-hidden" for="global-search">Søg</label>
+                <input id="global-search" class="search-input" type="search" placeholder="Søg i kunder, projekter og opgaver..." />
+                <button class="button button-light logout-button" type="button">Log ud <span aria-hidden="true">↪</span></button>
+                <button class="button button-light profile-button" type="button">Profil</button>
+                <span class="avatar" aria-label="Brugerprofil">♙</span>
+            </div>
+
+    </header>
+
+    <main class="customer-content">
+        <section class="customer-heading">
+            <h1>Alle Kunder</h1>
+            @* ---=== Create customer button ===--- *@
+            <button class="button button-dark" type="button"
+                    data-bs-toggle="modal" data-bs-target="#createCustomerModal">
+                <span aria-hidden="true">＋</span> Opret ny kunde
+            </button>
+        </section>
+
+        @* ---=== Create customer forms ===--- *@
+        <div class="modal fade customer-modal" id="createCustomerModal" tabindex="-1"
+             aria-labelledby="createCustomerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    @* FORM-START: form method="post" asp-page-handler="CreateCustomer" *@
+                    <form method="post" asp-page-handler="CreateCustomer">
+                    <div class="modal-header">
+                        <div>
+                            <p class="eyebrow">Kunder</p>
+                            <h2 class="modal-title" id="createCustomerModalLabel">Opret ny kunde</h2>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Luk"></button>
+                    </div>
+                    <div class="modal-body customer-form">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        @* FORM-FIELDS: *@
+
+                            @* NEW CUSTOMER NAME *@
+                            <div class="customer-form-field">
+                                <label asp-for="NewCustomer.Name">Kundenavn</label> @* asp-for keeps what was typed if there is an error*@
+                                <input asp-for="NewCustomer.Name" class="form-control" required maxlength="150" />
+                                <span asp-validation-for="NewCustomer.Name" class="text-danger"></span> @* asp-validation-for shows exception message under the right field*@
+                            </div>
+
+                            @* CONTACT PERSON *@
+                            <div class="customer-form-field">
+                                <label asp-for="NewCustomer.ContactPerson">Kontaktperson</label>
+                                <input asp-for="NewCustomer.ContactPerson" class="form-control" maxlength="150" required />
+                                <span asp-validation-for="NewCustomer.ContactPerson" class="text-danger"></span>
+                            </div>
+
+                            @* EMAIL *@
+                            <div class="customer-form-field">
+                                <label asp-for="NewCustomer.Email">Email</label>
+                                <input asp-for="NewCustomer.Email" class="form-control" type="email" maxlength="256" required />
+                                <span asp-validation-for="NewCustomer.Email" class="text-danger"></span>
+                            </div>
+
+                            @* PHONE *@
+                            <div class="customer-form-field">
+                                <label asp-for="NewCustomer.Phone">Telefon</label>
+                                <input asp-for="NewCustomer.Phone" class="form-control" type="tel" maxlength="50" required />
+                                <span asp-validation-for="NewCustomer.Phone" class="text-danger"></span>
+                            </div>
+
+                            @* WEBSITE *@
+                            <div class="customer-form-field">
+                                <label asp-for="NewCustomer.Website">Hjemmeside</label>
+                                <input asp-for="NewCustomer.Website" class="form-control" maxlength="25" required />
+                                <span asp-validation-for="NewCustomer.Website" class="text-danger"></span>
+                            </div>
+
+                            @* OWNER ID *@
+                            <div class="customer-form-field">
+                                <label asp-for="NewCustomer.OwnerId">Ansvarlig-ID</label>
+                                <input asp-for="NewCustomer.OwnerId" class="form-control" type="number" min="1" required />
+                                <span asp-validation-for="NewCustomer.OwnerId" class="text-danger"></span>
+                            </div>
+
+   
+
+                    </div>
+                    @* Cancel and submit buttons for create customer *@
+                    <div class="modal-footer">
+                        <button type="button" class="button button-light" data-bs-dismiss="modal">Annuller</button>
+                        <button type="submit" class="button button-dark">Opret kunde</button>
+                    </div>
+                    @* FORM-END *@
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        @* ---=== CUSTOMER LIST ===--- *@
+        <div id="customer-list">
+            @foreach (var c in Model.Customers.OrderBy(c => c.Name))
+            {
+                <section class="customer-summary">
+                    <div class="customer-primary">
+                        <strong>@c.Name <span>·</span> Kunde #@c.CustomerId</strong>
+                        <span>Kontakt: @c.ContactPerson</span>
+                    </div>
+                    <div class="customer-contact">
+                        <span>@c.Email</span>
+                        <span>@c.Phone</span>
+                    </div>
+                    <span class="customer-website">@c.Website</span>
+                    
+                    @* LINK BUTTON to CustomerDetailsPage*@
+                    <a class="button button-light customer-button" href="@Url.Page("/CustomerDetailsPage", new { id = c.CustomerId })">Se kunde</a>
+                </section>
+            }
+        </div>
+    </main>
+</div>
+
+@section Scripts {
+    @if (Model.ShowCreateModal)
+    {
+        <script>
+        new bootstrap.Modal(document.getElementById("createCustomerModal")).show();
+        </script>
+    }
+}
