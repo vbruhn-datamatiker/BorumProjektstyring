@@ -7,14 +7,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BorumProjektstyring.Pages
 {
-    public class TaskModel : PageModel
+    public class TaskDetailsModel : PageModel
     {
 
         private readonly VwTaskWithInfoRepo _viewRepo;
 
         private readonly TaskRepo _taskRepo;
 
-        public TaskModel(VwTaskWithInfoRepo viewRepo, TaskRepo taskRepo)
+        public TaskDetailsModel(VwTaskWithInfoRepo viewRepo, TaskRepo taskRepo)
         {
             _viewRepo = viewRepo;
             _taskRepo = taskRepo;
@@ -39,7 +39,7 @@ namespace BorumProjektstyring.Pages
 
         [BindProperty]
         [Required(ErrorMessage ="Indtast et postnummer")]
-        [[RegularExpression(@"^\d{4}$", ErrorMessage = "Postnummer skal bestå af præcis 4 tal")]
+        [RegularExpression(@"^\d{4}$", ErrorMessage = "Postnummer skal bestå af præcis 4 tal")]
         public string PostalCode { get; set; }
 
         [BindProperty]
@@ -62,6 +62,7 @@ namespace BorumProjektstyring.Pages
 
         public string CreatorName { get; set; }
 
+        //TODO skal OnGet have int id i parameterlisten?
         public IActionResult OnGet()
         {
             //HACK tester hjemmesiden af med den task, der har ID = 1 i vores database. Derefter skal jeg finde ud af, hvordan den selv henter den valgte task inde fra hjemmesiden, når du klikker på task X, Y eller z. Bør vel bare være TaskId, som er den udfyldte inputparameter?
@@ -108,7 +109,7 @@ namespace BorumProjektstyring.Pages
             return RedirectToPage("/ProjectPage");
         }
 
-        public IActionResult OnPostUpdate()
+        public IActionResult OnPostUpdateTask()
         {
             var taskToUpdate = _taskRepo.GetById(TaskId);
 
@@ -117,33 +118,20 @@ namespace BorumProjektstyring.Pages
                 return NotFound(); //Giver en fejl 404-statuskode, som betyder, at ressourcen ikke kan findes. Vises for brugeren i browseren.
             }
 
-            if (taskToUpdate.Location == null)
-            {
-                return BadRequest("The selected task does not have a location.");
-            }
-
+            //Properties, brugeren må ændre på 
             taskToUpdate.Type = Type;
-            taskToUpdate.Status = Status;
-
-            //TODO hvorfor fejl her? Fordi vi ikke selv skal sætte EndDate?
-            taskToUpdate.EndDate = EndDate; 
-
+            taskToUpdate.Status = Status; 
             taskToUpdate.Location.Address = LocationAddress;
             taskToUpdate.Location.PostalCode = PostalCode;
+            taskToUpdate.DepartmentId = DepartmentId;
+
 
             _taskRepo.Update(taskToUpdate, TaskId);
 
-            //Ifølge chatten kunne Update-metoden i repoet ændres til:
-/*
- * public void Update()
-{
-_dbContext.SaveChanges();
-}
-*/
 
-            //TODO Hvad skal returneres? Er det Return Page eller Return RedirectToPage?
-            return RedirectToPage("/Task", new { TaskId });
-}
+            //TODO sørg for at den redirecter tilbage til den selvsamme task via URL'ens id på tasken.
+            return RedirectToPage("/Task");
+        }
 
 
 }

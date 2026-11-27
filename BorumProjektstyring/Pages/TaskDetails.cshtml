@@ -1,8 +1,10 @@
 ﻿@page
-@model BorumProjektstyring.Pages.TaskModel
+@model BorumProjektstyring.Pages.TaskDetailsModel
 @{
-    ViewData["Title"] = "Opgave #1";
+    ViewData["Title"] = "Opgave #1 Opgavedetaljer";
 }
+
+@*TODO ÆNDRE TITLEN PÅ SIDEN TIL AT HENTE OPGAVEID'en *@
 
 <link rel="stylesheet" href="~/css/task.css" asp-append-version="true" />
 
@@ -74,13 +76,13 @@
                         </div><div class="small-actions">
                             <form method="post" asp-page-handler="Update">
                                 <input type="hidden" asp-for="TaskId" />
-                                <button type="submit" class="outline-button">Rediger</button>
+                                <button type="submit" class="outline-button">Redigér opgave</button>
                             </form>
 
 
                             <form method="post" asp-page-handler="Delete">
                                 <input type="hidden" asp-for="TaskId" />
-                                <button type="submit" class="outline-button">Slet</button>
+                                <button type="submit" class="outline-button">Slet opgave</button>
                             </form>
                         </div></div>
                         <div class="details-grid">
@@ -112,7 +114,8 @@
 
 
 
-                                @*//TODO Lav egen sektion for Noter, der selv henter ind og kalder på Noter*@
+                                @*//TODO Lav egen sektion for Noter, der selv henter ind og kalder på Noter + 
+                                    opdater Koordinator til at være afhængig af databasen/klassen*@
                         <div class="notes"><div class="notes-header"><strong>Noter</strong
                         ><button class="notes-select">Vis: Projekt #204　⌄</button>
                         <span class="notes-type">Opgave / Tidsregistrering</span>

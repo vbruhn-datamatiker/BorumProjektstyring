@@ -133,37 +133,6 @@ namespace ClassLib.Repo
 
             return taskToUpdate;
 
-            //TODO: SKal hele Update-metoden ændres til, at Update kun gemmer ændringerne, vi foretager i Task.cshtml.cs og altså via brugerfladen? HVis ja, ser metoden sådan her ud:
-
-            /*
-             * public void Update(){
-                    _dbContext.SaveChanges();
-                }
-             * */
-
-
-            //TODO skal hele Update-metoden ændres, så jeg selv vælger, hvilke properties(værdier) der skal overskrives? Det ville så se sådan her ud:
-
-            //var taskToUpdate = GetById(idOnTaskToUpdate);
-
-            //if (taskToUpdate == null)
-            //{
-            //    throw new KeyNotFoundException(
-            //        $"Error. A task with id {idOnTaskToUpdate} does not exist.");
-            //}
-
-            //// Opdaterer kun de properties, brugeren må ændre
-            //taskToUpdate.Type = newTask.Type;
-            //taskToUpdate.Status = newTask.Status;
-            //taskToUpdate.EndDate = newTask.EndDate;
-
-            //// Opdaterer den eksisterende Location
-            //taskToUpdate.Location.Address = newTask.Location.Address;
-            //taskToUpdate.Location.PostalCode = newTask.Location.PostalCode;
-
-            //_dbContext.SaveChanges();
-
-            //return taskToUpdate;
         }
 
 
