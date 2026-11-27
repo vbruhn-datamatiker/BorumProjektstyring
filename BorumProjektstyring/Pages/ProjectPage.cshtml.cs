@@ -33,6 +33,7 @@ public class ProjectPageModel : PageModel
     public string NextSortDirection => SortDirection == "asc" ? "desc" : "asc";
     public bool ShowCreateForm { get; private set; }
 
+    // Find out, why do OnGet() take parameter in the formel parameterlist?
     public void OnGet(
         string? typeFilter,
         string? assigneeFilter,
