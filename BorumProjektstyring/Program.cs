@@ -17,6 +17,8 @@ namespace BorumProjektstyring
 
             // Add services to the container.
             builder.Services.AddRazorPages();
+            builder.Services.AddScoped<VwTaskWithInfoRepo>();
+            builder.Services.AddScoped<TaskRepo>();
 
             builder.Services.AddDbContext<BorumBygDBContext>();
             builder.Services.AddScoped<CustomerRepo>();

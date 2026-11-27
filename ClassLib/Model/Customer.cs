@@ -21,7 +21,7 @@ public partial class Customer
 
     public int OwnerId { get; set; }
 
-    public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+    public virtual User Owner { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
 }

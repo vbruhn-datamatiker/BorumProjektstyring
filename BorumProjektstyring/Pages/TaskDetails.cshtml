@@ -1,0 +1,148 @@
+﻿@page
+@model BorumProjektstyring.Pages.TaskDetailsModel
+@{
+    ViewData["Title"] = "Opgave #1 Opgavedetaljer";
+}
+
+@*TODO ÆNDRE TITLEN PÅ SIDEN TIL AT HENTE OPGAVEID'en *@
+
+<link rel="stylesheet" href="~/css/task.css" asp-append-version="true" />
+
+<div class="task-screen">
+    <aside class="task-sidebar">
+        <div class="task-brand">ARBEJDSRUM</div>
+        <button class="workspace-select">Acme arbejdsrum <span>⌄</span></button>
+        <p class="task-nav-title">ARBEJDE</p>
+        <ul class="task-nav">
+            <li>Kunder</li>
+            <li>Projekter</li>
+            <li class="active">Opgaver</li>
+            <li>Tidsregistreringer</li>
+        </ul>
+        <p class="task-nav-title">KARTOTEK</p>
+        <ul class="task-nav">
+            <li>Lokationer</li>
+            <li>Brugere</li>
+            <li>Fravær</li>
+        </ul>
+        <p class="task-nav-title">AKTUEL KUNDE</p>
+        <ul class="task-nav">
+            <li>Acme Industries</li>
+            <li>Kontoretablering</li>
+        </ul>
+        <div class="task-support">Hjælp og support<br><strong>Alex Morgan · Konto</strong></div>
+    </aside>
+
+    <section class="task-content">
+        <header class="task-topbar">
+            <div class="breadcrumbs">Kunder <span>/</span> Acme Industries <span>/</span> Kontoretablering <span>/</span> Registrering</div>
+            <input class="search-box" type="text" placeholder="Søg i kunder, projekter og opgaver..." />
+            <button class="task-button login-button">Log ind <span class="user-icon">↪</span></button>
+            <button class="profile-button">Profil</button><span class="user-icon">♙</span>
+        </header>
+
+        <main class="task-main">
+            <div class="task-heading">
+                <div><h1>Opgave #1</h1><p>Se registrerede timer efter dato, bruger, projekt og opgave.</p></div>
+                <button class="dark-button">+ Registrer tid</button>
+            </div>
+
+            @*//TODO Skal Tidsregistrering fjernes eller oprettes som egen sektion?*@
+            <div class="summary-cards">
+                <div class="summary-card"><span class="summary-label">Timer i alt</span><strong class="summary-value">6,5 t</strong><span class="summary-detail">Med de valgte filtre</span></div>
+                <div class="summary-card"><span class="summary-label">Tidsregistreringer</span><strong class="summary-value">3</strong><span class="summary-detail">Fordelt på 1 opgave</span></div>
+                <div class="summary-card"><span class="summary-label">Medarbejdere</span><strong class="summary-value">2</strong><span class="summary-detail">Brugere med registrerede timer</span></div>
+            </div>
+
+            @* //TODO ER ALLE INFO KORREKTE -  HENTER DEN FRA DEN RIGTIGE PROPERTY/METODE?
+ *@ 
+
+            <div class="task-columns">
+                <section class="task-panel">
+                    <div class="task-panel-inner">
+                        <div class="selected-task"><div><p class="eyebrow">VALGT OPGAVE</p>
+@*                             //TODO HUSK AT ÆNDRE INSTALLATION TIL LOKATION ELLER HVAD DER ELLERS SKAL STÅ HER!
+ *@                            <p>Installation</p> 
+
+
+                            @*//Knapper for "Slet" og "Rediger" opgaver *@
+
+                            @*//TODO tilføj og tilrettelæg alle de felter, som en bruger kan udfylde til update-formen herunder.
+                                Gør på samme måde som Ulrik, hvor den eksisterende opgaves info allerede står udfyldt i felterne,
+                                som brugeren så kan se og vælge selv at rette i. ?
+                                Husk fx en dropdown-menu for status!
+                            *@
+
+                        </div><div class="small-actions">
+                            <form method="post" asp-page-handler="Update">
+                                <input type="hidden" asp-for="TaskId" />
+                                <button type="submit" class="outline-button">Redigér opgave</button>
+                            </form>
+
+
+                            <form method="post" asp-page-handler="Delete">
+                                <input type="hidden" asp-for="TaskId" />
+                                <button type="submit" class="outline-button">Slet opgave</button>
+                            </form>
+                        </div></div>
+                        <div class="details-grid">
+
+                            <div><span class="detail-label">Status</span>
+                                <span class="detail-value"> @Model.Status </span></div>
+
+                                <div><span class="detail-label"> Afdelings-Id </span>
+                                    <span class="detail-value"> @Model.DepartmentId </span></div>
+
+                            <div><span class="detail-label">Startdato</span>
+                                <span class="detail-value"> @Model.StartDate </span>
+
+                                </div><div><span class="detail-label">Slutdato</span>
+                                    <span class="detail-value"> @Model.EndDate </span></div>
+
+                            <div><span class="detail-label">Oprettet af</span>
+                                <span class="detail-value"> @Model.CreatorName </span>
+                        <small class="detail-label">Bruger #@Model.CreatorUserId</small>
+
+                        @*//TODO Husk at Koordinator (Projektkoordinator) skal sættes via kode - ikke skrevet som Jane Nielsen selv i HTML*@
+
+                    </div><div><span class="detail-label">Projektkoordinator</span><span class="detail-value">Jane Nielsen</span></div>
+                        </div>
+
+                        <div class="location"><h3>Lokation</h3>
+                            <span class="detail-label">Lokations-id: #@Model.LocationId </span><p> Adresse: @Model.LocationAddress <br> Postnummer: @Model.PostalCode </p>
+                            <button class="outline-button">Google Maps</button><div class="map-placeholder">▧</div></div>
+
+
+
+                                @*//TODO Lav egen sektion for Noter, der selv henter ind og kalder på Noter + 
+                                    opdater Koordinator til at være afhængig af databasen/klassen*@
+                        <div class="notes"><div class="notes-header"><strong>Noter</strong
+                        ><button class="notes-select">Vis: Projekt #204　⌄</button>
+                        <span class="notes-type">Opgave / Tidsregistrering</span>
+                        <button class="outline-button">+ Tilføj note</button></div><div class="notes-body">
+                            <strong>Adgangskrav til lokationen</strong><p>Aftal adgang med kundens kontaktperson inden ankomst.</p>
+                            </div><div class="notes-footer"><span>Opgave #104 · Kontoretablering</span
+                            ><span>◉　Koordinator: Jane Nielsen</span></div></div>
+                    </div>
+                </section>
+
+                @*//TODO Lav Projekt-sektionen også for sig!*@
+                <aside class="task-panel project-panel"><span class="detail-label">Projekt</span>
+                    <h2>Projekt #104</h2><p class="project-name">Installation</p>
+                    <div class="details-grid"><div><span class="detail-label">Status</span>
+                        <span class="detail-value">I gang</span></div><div><span class="detail-label">Afdelings-ID</span>
+                            <span class="detail-value">26-80</span></div><div><span class="detail-label">Startdato</span>
+                                <span class="detail-value">3. jun. 2026</span></div>
+                                <div><span class="detail-label">Slutdato</span>
+                                    <span class="detail-value">--:--:--</span></div>
+                                    <div><span class="detail-label">Oprettet af</span>
+                                        <span class="detail-value">Alex Morgan</span>
+                                        <small class="detail-label">Bruger #7</small></div></div>
+                                        <div class="related"><h3>Relaterede poster</h3><p>6,5 timer · 3 tidsregistreringer</p>
+                                            <button class="outline-button">Se tidsregistreringer</button>
+                                            <button class="outline-button">Opgavenoter</button></div>
+                                            <div class="project-footer">Projekt #204 · Kontoretablering</div></aside>
+            </div>
+        </main>
+    </section>
+</div>
