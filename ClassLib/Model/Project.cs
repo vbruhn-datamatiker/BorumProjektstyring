@@ -28,4 +28,10 @@ public partial class Project
     public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();
 
     public virtual User User { get; set; }
+
+    public override string ToString()
+    {
+        return $"ProjectId: {ProjectId}, ProjectTitle: {ProjectTitle}, Type: {Type}, StartDate: {StartDate}, History: {History}, CustomerId: {CustomerId}, UserId: {UserId}";
+    }
+    
 }

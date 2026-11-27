@@ -1,0 +1,268 @@
+﻿@page
+@model BorumProjektstyring.Pages.ProjectPageModel
+@{
+    ViewData["Title"] = "Projekt";
+}
+
+<div class="project-page">
+    <header class="topbar">
+        <nav class="breadcrumbs" aria-label="Brødkrummesti">
+            <a href="#">Projekter</a>
+            <span>/</span>
+
+           @*--TODO Add Status to base class and database*@
+
+        
+
+        
+
+
+      
+   
+        </nav>
+        <div class="topbar-actions">
+            <label class="visually-hidden" for="global-search">Søg</label>
+            <input id="global-search" class="search-input" type="search" placeholder="Søg i kunder, projekter og opgaver..." />
+            <button class="button button-light logout-button" type="button">Log ud <span aria-hidden="true">↪</span></button>
+            <button class="button button-light profile-button" type="button">Profil</button>
+            <span class="avatar" aria-label="Brugerprofil">♙</span>
+        </div>
+    </header>
+
+    <main class="project-content">
+        <section class="project-heading">
+            <div>
+                <h1>Alle projekter </h1>
+              
+            </div>
+
+            
+            <div class="heading-actions">
+                <button class="button button-light" type="button">Rediger projekt</button>
+                <a class="button button-dark" asp-page="/ProjectPage" asp-route-showCreateForm="true"><span aria-hidden="true">＋</span> Nyt projekt</a>
+            </div>
+        </section>
+
+        @if (Model.ShowCreateForm)
+        {
+            <section class="panel project-modal" aria-labelledby="createProjectHeading">
+                <form method="post" asp-page-handler="CreateProject">
+                    <div class="modal-header">
+                        <div>
+                            <p class="eyebrow">Projekter</p>
+                            <h2 class="modal-title" id="createProjectHeading">Opret nyt projekt</h2>
+                        </div>
+                    </div>
+                    <div class="modal-body project-form">
+                        <div class="project-form-field">
+                            <label for="newProjectTitle">Projektnavn</label>
+                            <input id="newProjectTitle" name="projectTitle" type="text" class="form-control" required />
+                        </div>
+                        <div class="project-form-field">
+                            <label for="newProjectType">Type</label>
+                            <input id="newProjectType" name="type" type="text" class="form-control" required />
+                        </div>
+                        <div class="project-form-field">
+                            <label for="newProjectStartDate">Startdato</label>
+                            <input id="newProjectStartDate" name="startDate" type="date" class="form-control" required />
+                        </div>
+                        <div class="project-form-field">
+                            <label for="newProjectHistory">Historik</label>
+                            <textarea id="newProjectHistory" name="history" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="project-form-row">
+                            <div class="project-form-field">
+                                <label for="newProjectCustomerId">Kunde-ID</label>
+                                <input id="newProjectCustomerId" name="customerId" type="number" class="form-control" min="1" required />
+                            </div>
+                            <div class="project-form-field">
+                                <label for="newProjectUserId">Ansvarlig</label>
+                                <select id="newProjectUserId" name="userId" class="form-select" required>
+                                    <option value="">Vælg ansvarlig</option>
+                                    @foreach (var user in Model.Users.OrderBy(user => user.Name))
+                                    {
+                                        <option value="@user.UserId">@user.Name</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="button button-light" asp-page="/ProjectPage">Annuller</a>
+                        <button type="submit" class="button button-dark">Opret projekt</button>
+                    </div>
+                </form>
+            </section>
+        }
+
+        <div class="project-workspace">
+            <div class="project-main-column">
+                <section class="panel tasks-panel" aria-labelledby="tasks-heading">
+                    <div class="tasks-toolbar">
+
+                        <h2 id="tasks-heading">Projekter <span class="project-count-badge">I alt: @Model.TotalProjectCount</span></h2>
+
+
+                        <form method="get" class="task-filters">
+                            <label class="visually-hidden" for="type-filter">Projekttype</label>
+                            <select id="type-filter" name="typeFilter">
+                                <option value="">Type: Alle</option>
+                                @foreach (var type in Model.AllProjects
+                                    .Select(project => project.Type)
+                                    .Where(type => !string.IsNullOrWhiteSpace(type))
+                                    .Distinct()
+                                    .OrderBy(type => type))
+                                {
+                                    <option value="@type" selected="@(Model.TypeFilter == type)">@type</option>
+                                }
+                            </select>
+
+                            <label class="visually-hidden" for="assignee-filter">Ansvarlig</label>
+                            <select id="assignee-filter" name="assigneeFilter">
+                                <option value="">Ansvarlig: Alle</option>
+                                @foreach (var userName in Model.AllProjects
+                                    .Select(project => project.User?.Name)
+                                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                                    .Distinct()
+                                    .OrderBy(name => name))
+                                {
+                                    <option value="@userName" selected="@(Model.AssigneeFilter == userName)">@userName</option>
+                                }
+                            </select>
+
+                            <label class="visually-hidden" for="customer-filter">Kunde</label>
+                            <select id="customer-filter" name="customerFilter">
+                                <option value="">Kunde: Alle</option>
+                                @foreach (var customerName in Model.AllProjects
+                                    .Select(project => project.Customer?.Name)
+                                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                                    .Distinct()
+                                    .OrderBy(name => name))
+                                {
+                                    <option value="@customerName" selected="@(Model.CustomerFilter == customerName)">@customerName</option>
+                                }
+                            </select>
+                            <input type="hidden" name="sortDirection" value="@Model.SortDirection" />
+                            @if (Model.SelectedProject is not null)
+                            {
+                                <input type="hidden" name="selectedProjectId" value="@Model.SelectedProject.ProjectId" />
+                            }
+                            <button class="button button-light" type="submit">Filtrer</button>
+                            <a class="sort-button"
+                               asp-page="/ProjectPage"
+                               asp-route-typeFilter="@Model.TypeFilter"
+                               asp-route-assigneeFilter="@Model.AssigneeFilter"
+                               asp-route-customerFilter="@Model.CustomerFilter"
+                               asp-route-sortDirection="@Model.NextSortDirection"
+                               asp-route-selectedProjectId="@Model.SelectedProject?.ProjectId"
+                               aria-label="Sorter efter projektnavn, @(Model.SortDirection == "asc" ? "stigende" : "faldende")">
+                                Projektnavn <span aria-hidden="true">@(Model.SortDirection == "asc" ? "↑" : "↓")</span>
+                            </a>
+                        </form>
+                    </div>
+
+
+
+
+                    <div class="table-scroll">
+                        <table class="tasks-table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Projektnavn</th>
+                                    <th scope="col">Projekt-ID</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Startdato</th>
+                                    <th scope="col">Kunde</th>
+                                    <th scope="col">Ansvarlig</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var project in Model.Projects)
+                                {
+                                    <tr class="@(Model.SelectedProject?.ProjectId == project.ProjectId ? "selected-row" : null)">
+                                        <td>
+                                            <a class="project-select-button"
+                                               asp-page="/ProjectPage"
+                                               asp-route-typeFilter="@Model.TypeFilter"
+                                               asp-route-assigneeFilter="@Model.AssigneeFilter"
+                                               asp-route-customerFilter="@Model.CustomerFilter"
+                                               asp-route-sortDirection="@Model.SortDirection"
+                                               asp-route-selectedProjectId="@project.ProjectId">@project.ProjectTitle</a>
+                                        </td>
+                                        <td>#@project.ProjectId</td>
+                                        <td>@project.Type</td>
+                                        <td>@project.StartDate.ToString("dd-MM-yyyy")</td>
+                                        <td>@project.Customer?.Name</td>
+                                        <td>@project.User?.Name</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p class="table-caption">Viser @Model.Projects.Count projekter på denne side af @Model.TotalProjectCount i alt</p>
+                </section>
+
+                <section class="panel notes-panel" aria-labelledby="notes-heading">
+                    <div class="notes-toolbar">
+                        <h2 id="notes-heading">Noter</h2>
+                        <label class="visually-hidden" for="notes-filter">Vis noter</label>
+                        <select id="notes-filter"><option>Vis: Projekt #204</option></select>
+                        <span class="notes-type">Opgave / Tidsregistrering</span>
+                        <button class="button button-light" type="button">＋ Tilføj note</button>
+                    </div>
+                    <article class="note-item">
+                        <div>
+                            <h3>Adgangskrav til lokationen</h3>
+                            <p>Aftal adgang med kundens kontaktperson inden ankomst.</p>
+                        </div>
+                        <div class="coordinator"><span class="avatar avatar-small" aria-hidden="true">♙</span><span>Koordinator: Jane Nielsen</span></div>
+                    </article>
+                </section>
+            </div>
+
+            <aside class="panel project-details" aria-labelledby="project-details-heading">
+                <div class="details-heading">
+                    <div>
+                        <p class="eyebrow">Valgt projekt</p>
+                        <h2 id="project-details-heading">Projektoplysninger</h2>
+                    </div>
+                    <div class="details-actions">
+                        <button class="button button-light" type="button">Rediger</button>
+                        @if (Model.SelectedProject is not null)
+                        {
+                            <form method="post" asp-page-handler="Delete">
+                                <input type="hidden" name="ProjectId" value="@Model.SelectedProject.ProjectId" />
+                                <button class="button button-light" type="submit">Slet</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+                @if (Model.SelectedProject is null)
+                {
+                    <p class="project-details-placeholder">Vælg et projekt på listen for at se oplysningerne her.</p>
+                }
+                else
+                {
+                    <div>
+                        <div class="project-title-block">
+                            <h3>@Model.SelectedProject.ProjectTitle</h3>
+                            <p class="project-detail-type">@(string.IsNullOrWhiteSpace(Model.SelectedProject.Type) ? "Ikke angivet" : Model.SelectedProject.Type)</p>
+                        </div>
+                        <dl class="project-facts">
+                            <div><dt>Projekt-ID</dt><dd>#@Model.SelectedProject.ProjectId</dd></div>
+                            <div><dt>Startdato</dt><dd>@Model.SelectedProject.StartDate.ToString("dd-MM-yyyy")</dd></div>
+                            <div><dt>Kunde</dt><dd>@(Model.SelectedProject.Customer?.Name ?? "Ikke angivet")</dd></div>
+                            <div><dt>Kunde-ID</dt><dd>@Model.SelectedProject.CustomerId</dd></div>
+                            <div class="fact-wide"><dt>Ansvarlig</dt><dd>@(Model.SelectedProject.User?.Name ?? "Ikke angivet")</dd></div>
+                        </dl>
+                        <section class="project-history-details">
+                            <h3>Historik</h3>
+                            <p>@(string.IsNullOrWhiteSpace(Model.SelectedProject.History) ? "Ingen historik angivet." : Model.SelectedProject.History)</p>
+                        </section>
+                    </div>
+                }
+            </aside>
+        </div>
+    </main>
+</div>

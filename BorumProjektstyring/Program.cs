@@ -1,3 +1,5 @@
+using ClassLib.Model;
+using ClassLib.Repo;
 using ClassLib.Interface;
 using ClassLib.Model;
 using ClassLib.Repo;
@@ -13,9 +15,15 @@ namespace BorumProjektstyring
         {
             var builder = WebApplication.CreateBuilder(args);
 
+    
+
             // Add services to the container.
             builder.Services.AddRazorPages();
 
+            builder.Services.AddDbContext<BorumBygDBContext>();
+
+            builder.Services.AddScoped<ProjectRepo>();
+            builder.Services.AddScoped<UserRepo>();
             IUserAuthRepo userRepo = new UserAuthRepo();
             // We are using scoped because we want a new instance of the repository for each HTTP request.
             // This is important for managing database connections and ensuring that each request has its own context.
