@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using ClassLib.Security;
 
-namespace BorumProjektstyring.Pages;
+namespace BorumProjektstyring.Pages.Inputs;
 
 public class PasswordInput
 {

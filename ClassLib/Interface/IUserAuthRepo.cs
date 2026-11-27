@@ -7,7 +7,7 @@ namespace ClassLib.Interface
 {
     public interface IUserAuthRepo : IRepo<UserAuthentication>
     {
-        UserAuthentication GetAuthByUserName(string username);
+        UserAuthentication? GetAuthByUserName(string username);
 
         UserAuthentication? UpdatePassword(UserAuthentication entity, int id);
     }

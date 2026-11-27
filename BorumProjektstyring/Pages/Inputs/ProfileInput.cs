@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace BorumProjektstyring.Pages;
+namespace BorumProjektstyring.Pages.Inputs;
 
 public class ProfileInput
 {
