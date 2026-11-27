@@ -1,0 +1,136 @@
+﻿@page
+@model BorumProjektstyring.Pages.ProfileModel
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil - Borum Byggerådgivning ApS</title>
+    <link rel="stylesheet" href="~/css/Profile.css" asp-append-version="true" />
+</head>
+
+<div class="profile-page">
+    <div class="profile-breadcrumb">Arbejdsrum&nbsp; / &nbsp;Min profil</div>
+
+    <div class="profile-heading">
+        <h1>Min profil</h1>
+        <p>Se og opdater dine kontaktoplysninger og din adgangskode.</p>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <form method="post" asp-page="/Logout">
+                <button type="submit" class="nav-link btn btn-link">
+                    Log ud
+                </button>
+            </form>
+        }
+    </div>
+
+    <div class="profile-grid">
+        <section class="profile-card profile-card--details" aria-labelledby="personal-details-heading">
+            <form method="post" asp-page-handler="User">
+                <div class="profile-card__body">
+                    <div class="profile-card__header">
+                        <div>
+                            <h2 id="personal-details-heading">Personlige oplysninger</h2>
+                            <p>Hold dine oplysninger opdaterede, så kolleger kan kontakte dig.</p>
+                        </div>
+                        <span class="profile-user-badge">Bruger #@Model.UserId</span>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.UserSuccess))
+                    {
+                        <p class="profile-message profile-message--success" aria-live="polite">@Model.UserSuccess</p>
+                    }
+
+                    <div class="profile-fields">
+                        <div class="profile-field">
+                            <label for="profile-name">Navn</label>
+                            <input id="profile-name" type="text" asp-for="Profile.Username" />
+                            <span asp-validation-for="Profile.Username" class="profile-message profile-message--error"></span>
+                        </div>
+
+                        <div class="profile-field">
+                            <label for="profile-email">E-mail</label>
+                            <input id="profile-email" type="email" asp-for="Profile.Email" />
+                            <span asp-validation-for="Profile.Email" class="profile-message profile-message--error"></span>
+                        </div>
+
+                        <div class="profile-field">
+                            <label for="profile-phone">Telefon</label>
+                            <input id="profile-phone" type="tel" asp-for="Profile.Phone" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-card__actions">
+                    <button class="profile-button profile-button--primary" type="submit">Gem ændringer</button>
+                    <button class="profile-button profile-button--secondary" type="reset">Annuller</button>
+                </div>
+            </form>
+        </section>
+
+        <div class="profile-sidebar">
+            <section class="profile-card" aria-labelledby="password-heading">
+                <div class="profile-card__body">
+                    <h2 id="password-heading">Adgangskode</h2>
+                    <p class="profile-password">••••••••••••</p>
+                    <p>Skift din adgangskode for at beskytte din konto.</p>
+                    @if (!string.IsNullOrEmpty(Model.PasswordSuccess))
+                    {
+                        <p class="profile-message profile-message--success" aria-live="polite">@Model.PasswordSuccess</p>
+                    }
+
+                    <details class="profile-password-details" @if (Model.PasswordDialogOpen) { <text>open</text> }>
+                        <summary class="profile-button profile-button--primary profile-button--full">
+                            Skift adgangskode
+                        </summary>
+
+                        <div class="profile-dialog">
+                            <div class="profile-dialog__header">
+                                <h2 id="password-dialog-heading">Skift adgangskode</h2>
+                            </div>
+
+                            <form method="post" asp-page="/Profile" class="profile-dialog__form" autocomplete="off">
+                                @if (!string.IsNullOrEmpty(Model.PasswordError))
+                                {
+                                    <div class="@* profile *@-message profile-message--error" role="alert">@Model.PasswordError</div>
+                                }
+
+                                <div asp-validation-summary="ModelOnly" class="profile-message profile-message--error" role="alert"></div>
+
+                                <div class="profile-field">
+                                    <label asp-for="Password.CurrentPassword">Nuværende adgangskode</label>
+                                    <input asp-for="Password.CurrentPassword" type="password" autocomplete="off" />
+                                    <span asp-validation-for="Password.CurrentPassword" class="profile-message profile-message--error"></span>
+                                </div>
+
+                                <div class="profile-field">
+                                    <label asp-for="Password.NewPassword">Ny adgangskode</label>
+                                    <input asp-for="Password.NewPassword" type="password" autocomplete="new-password" />
+                                    <span asp-validation-for="Password.NewPassword" class="profile-message profile-message--error"></span>
+                                </div>
+
+                                <div class="profile-field">
+                                    <label asp-for="Password.ConfirmNewPassword">Bekræft ny adgangskode</label>
+                                    <input asp-for="Password.ConfirmNewPassword" type="password" autocomplete="new-password" />
+                                    <span asp-validation-for="Password.ConfirmNewPassword" class="profile-message profile-message--error"></span>
+                                </div>
+
+                                <div class="profile-dialog__actions">
+                                    <button class="profile-button profile-button--primary" type="submit" asp-page-handler="Password">Gem adgangskode</button>
+                                </div>
+                            </form>
+                        </div>
+                    </details>
+                </div>
+            </section>
+
+            <section class="profile-card" aria-labelledby="help-heading">
+                <div class="profile-card__body">
+                    <h2 id="help-heading">Brug for hjælp?</h2>
+                    <p>Kontakt din administrator, hvis du har brug for hjælp til din profil eller adgang til arbejdsrummet.</p>
+                    <p>Du finder også hjælp i navigationen.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

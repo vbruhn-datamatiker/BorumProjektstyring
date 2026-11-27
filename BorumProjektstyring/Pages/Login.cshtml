@@ -1,0 +1,61 @@
+﻿@page
+@model BorumProjektstyring.Pages.LoginModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log ind - Borum Byggerådgivning ApS</title>
+    <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
+</head>
+<body class="login-page">
+    <header class="login-header">
+        <div class="login-header__company">BORUM BYGGERÅDGIVNING ApS</div>
+        <a class="login-header__support" href="mailto:support@borum.dk">Hjælp og support</a>
+    </header>
+
+    <main class="login-main">
+        <section class="login-card" aria-labelledby="login-title">
+            <h1 id="login-title">Velkommen tilbage</h1>
+            <p class="login-card__intro">Log ind for at administrere projekter, opgaver og tid.</p>
+
+            <form method="post" class="login-form" asp-page-handler="Submit">
+                <div asp-validation-summary="ModelOnly" class="login-validation" role="alert"></div>
+
+                <div class="login-form__field">
+                    <label for="email">Arbejdsmail</label>
+                    <input id="email" asp-for="Username" type="email" placeholder="navn@firma.dk" autocomplete="email" />
+                </div>
+
+                <div class="login-form__field">
+                    <label for="password">Adgangskode</label>
+                    <div class="password-input">
+                        <input id="password" asp-for="Password" type="password" placeholder="Indtast din adgangskode" autocomplete="current-password" />
+                        <button type="button" class="password-input_toggle" aria-label="Vis adgangskode">Vis</button>
+                    </div>
+                </div>
+                @* // We do this through browsers already, so we don't need to implement it ourselves. The toggle button is just for show. *@
+                <div class="login-form__options">
+                    <label class="remember-me" for="remember-me">
+                        <input id="remember-me" name="remember-me" type="checkbox" />
+                        <span>Husk mig</span>
+                    </label>
+                    <a href="#">Glemt adgangskode?</a>
+                </div>
+
+                <button class="login-button" type="submit">Log ind</button>
+            </form>
+
+            <p class="login-card__help">Brug for adgang? Kontakt din administrator</p>
+        </section>
+    </main>
+
+    <footer class="login-footer">
+        <span>ARBEJDSRUM</span><span>Projekt- og tidsstyring</span>
+    </footer>
+</body>
+</html>

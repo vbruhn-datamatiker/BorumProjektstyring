@@ -30,4 +30,9 @@ public partial class User
     public virtual ICollection<TimeLog> TimeLogs { get; set; } = new List<TimeLog>();
 
     public virtual UserAuthentication UserAuthentication { get; set; }
+
+    public override string ToString()
+    {
+        return $"UserId: {UserId}, Name: {Name}, Phone: {Phone}, Email: {Email}, ImagePath: {ImagePath}"; 
+    }
 }
