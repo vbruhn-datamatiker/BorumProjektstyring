@@ -19,7 +19,7 @@ namespace BorumProjektstyring
             builder.Services.AddRazorPages();
 
             builder.Services.AddDbContext<BorumBygDBContext>();
-
+            builder.Services.AddScoped<CustomerRepo>();
             builder.Services.AddScoped<ProjectRepo>();
             builder.Services.AddScoped<UserRepo>();
             IUserAuthRepo userRepo = new UserAuthRepo();
